@@ -8,12 +8,13 @@ public class Customer extends User {
 	private ArrayList<Order> orders;
 	
 	public Customer() {
+		super();
 		this.orders = new ArrayList<Order>();
 	}
 	
-	public Customer(String username) {
+	public Customer(String username, String emailAddress, String firstName, String lastName, String password) {
+		super(username, emailAddress, firstName, lastName, password);
 		this.orders = new ArrayList<Order>();
-		this.setUsername(username);
 	}
 	
 	public void setShippingAddress(String shippingAddress) {
