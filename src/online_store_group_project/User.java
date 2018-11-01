@@ -2,17 +2,15 @@ package online_store_group_project;
 
 public abstract class User {
 	
-	private String username;
-	private String emailAddress;
-	private String firstName;
-	private String lastName;
-	private String password;
+	protected Store store;
+	protected String username;
+	protected String emailAddress;
+	protected String firstName;
+	protected String lastName;
+	protected String password;
 	
-	public User() {
-		
-	}
-	
-	public User(String username, String emailAddress, String firstName, String lastName, String password) {
+	public User(Store store, String username, String emailAddress, String firstName, String lastName, String password) {
+		this.store = store;
 		this.username = username;
 		this.emailAddress = emailAddress;
 		this.firstName = firstName;
@@ -20,6 +18,14 @@ public abstract class User {
 		this.password = password;
 	}
 	
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}

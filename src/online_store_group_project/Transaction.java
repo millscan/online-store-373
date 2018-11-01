@@ -3,18 +3,22 @@ package online_store_group_project;
 import java.util.Date;
 
 public class Transaction {
-	
-	enum PaymentOption {
-		CreditCard,
-		DebitCard,
-		Bitcoin
-	}
 
+	private Store store;
 	private int amount;
 	private Date date;
 	private User toUser;
 	private User fromUser;
-	private PaymentOption paymentOption;
+	private PaymentOptions paymentOption;
+	
+	public Transaction(Store store, int amount, Date date, User fromUser, User toUser,PaymentOptions paymentOption) {
+		this.store = store;
+		this.amount = amount;
+		this.date = date;
+		this.fromUser = fromUser;
+		this.toUser = toUser;
+		this.paymentOption = paymentOption;
+	}
 	
 	public void setAmount(int amount) {
 		this.amount = amount;
@@ -48,11 +52,11 @@ public class Transaction {
 		return this.fromUser;
 	}
 	
-	public void setPaymentOption(PaymentOption po) {
+	public void setPaymentOption(PaymentOptions po) {
 		this.paymentOption = po;
 	}
 	
-	public PaymentOption getPaymentOption() {
+	public PaymentOptions getPaymentOption() {
 		return this.paymentOption;
 	}
 }
