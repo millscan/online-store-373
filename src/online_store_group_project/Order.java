@@ -33,6 +33,7 @@ public class Order {
 	
 	public void ship() {
 		this.shipped = true;
+		//remove item from Owners list of items!
 	}
 	
 	public boolean getShippedStatus() {
