@@ -6,10 +6,12 @@ public class Customer extends User {
 	
 	private String shippingAddress;
 	private ArrayList<Order> orders;
+	private ArrayList<Item> cart;
 	
 	public Customer(Store store, String username, String emailAddress, String firstName, String lastName, String password) {
 		super(store, username, emailAddress, firstName, lastName, password);
 		this.orders = new ArrayList<Order>();
+		this.cart = new ArrayList<Item>();
 	}
 	
 	public void setShippingAddress(String shippingAddress) {
@@ -30,5 +32,23 @@ public class Customer extends User {
 	
 	public void removeOrder(Order order) {
 		orders.remove(order);
+	}
+	
+	public void addToCart(Item item) {
+		cart.add(item);
+	}
+	
+	public void removeFromCart(Item item) {
+		cart.remove(item);
+	}
+	
+	public ArrayList<Item> getCart(){
+		return cart;
+	}
+	
+	public void viewCart() {
+		for (int i = 0; i < cart.size(); i++) {
+			System.out.println(cart.get(i).getName() + " :$" + cart.get(i).getPrice() + "\n");
+		}
 	}
 }
