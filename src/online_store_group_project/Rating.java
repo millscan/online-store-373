@@ -10,8 +10,8 @@ public class Rating {
 	//CONSTRUCTORS
 	public Rating(Item item) {
 		this.item = item;
-		this.score = score;
-		this.review = review;
+		this.score = 0;
+		this.review = "";
 	}
 	
 	public Rating(Item item, float score, String review) {
