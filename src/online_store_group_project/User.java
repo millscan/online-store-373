@@ -1,7 +1,7 @@
 package online_store_group_project;
 
 public abstract class User {
-	
+
 	protected Store store;
 	protected String username;
 	protected String emailAddress;

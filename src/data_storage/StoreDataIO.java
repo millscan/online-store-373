@@ -1,10 +1,12 @@
-package online_store_group_project;
+package data_storage;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import online_store_group_project.User;
 
 public class StoreDataIO {
 	
@@ -68,7 +70,7 @@ public class StoreDataIO {
 		
 		//TODO: Use payson's function to check if username/email exists
 		
-		csvLine = String.format("%s%s,%s,%s,%s,%s",csvLine, u.username, u.firstName, u.lastName, u.emailAddress, u.password);
+		csvLine = String.format("%s%s,%s,%s,%s,%s",csvLine, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
 		System.out.println(csvLine);
 		
 		try {
