@@ -9,7 +9,7 @@ public class Driver1 {
 	
 	public static void main(String args[]) {
 		
-		//Create Store 
+		//Create Store  
 		Store s1 = new Store(); 
 		
 	    //Create Customers 
