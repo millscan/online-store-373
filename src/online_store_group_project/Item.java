@@ -1,26 +1,36 @@
 package online_store_group_project;
 
-public class Item {
+
+public class Item implements Comparable<Item> {
 	
+	private Store store; 
 	private Owner seller;
 	private String name;
 	private String description;
-	private String category;
-	private float price;
+	private Category category;
+	private double price;
 	private int quantity;
 	
 	
-	
-	public Item(Owner seller, String name, String description, String category, float price, int quantity) {
+	//Constructor
+	public Item(Store store, Owner seller, String name, String description, Category category, double price, int quantity) {
+		
+		if(!store.itemExists(name)) {
+		this.store = store; 
 		this.seller = seller;
 		this.name = name;
 		this.description = description;
 		this.category = category;
 		this.price = price;
 		this.quantity = quantity;
+		}
+		
+		else {
+	    System.out.println("Item not created");	
+		}
 	}
 	
-	
+	//Getters and Setters 
 	public Owner getSeller() {
 		return seller;
 	}
@@ -46,19 +56,19 @@ public class Item {
 		return this.description;
 	}
 	
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 	
-	public float getPrice() {
+	public double getPrice() {
 		return this.price;
 	}
 	
@@ -69,4 +79,11 @@ public class Item {
 	public int getQuantity() {
 		return this.quantity;
 	}
+	
+	//Over-riding compare method to sort Items alphabetically by name
+	public int compareTo(Item i1) {
+	
+		return this.getName().compareTo(i1.getName());
+	}	
+		
 }

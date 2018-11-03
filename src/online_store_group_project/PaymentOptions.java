@@ -5,3 +5,4 @@ public enum PaymentOptions {
 	DebitCard,
 	Bitcoin
 }
+

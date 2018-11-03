@@ -10,12 +10,20 @@ public abstract class User {
 	protected String password;
 	
 	public User(Store store, String username, String emailAddress, String firstName, String lastName, String password) {
+		Boolean EmailExists = store.userExists(emailAddress);
+		Boolean UserNameExists = store.userExists(username); 
+		
+		if(!EmailExists && !UserNameExists) {
 		this.store = store;
 		this.username = username;
 		this.emailAddress = emailAddress;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
+		}
+		else {
+		System.out.println("User not created");
+		}
 	}
 	
 	public Store getStore() {
