@@ -10,7 +10,7 @@ public class Driver1 {
 	public static void main(String args[]) {
 		
 		//Create Store   
-		Store s1 = new Store(); 
+		Store s1 = new Store();  
 		
 	    //Create Customers 
 		Customer c1 = new Customer(s1, "joethebro1997", "joe@example.com", "Joe", "Shmo", "joespass");
