@@ -8,6 +8,7 @@ public class Store {
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Owner> owners = new ArrayList<Owner>(); 
 	public ArrayList<User> users = new ArrayList<User>(); 
+	public ArrayList<Category> categories = new ArrayList<Category>();
 	private ArrayList<Transaction> transactions;
 	private String url;
 	
@@ -123,5 +124,39 @@ public class Store {
 		}
 		return false;
 	}
+	//All Store Searches 
+	public Category SearchCategories(String CategoryName) {
+		 for(int i = 0; i < categories.size(); i++) {
+			 if(categories.get(i).getName().equals(CategoryName)) {
+				 return categories.get(i); 
+			 }
+		 }
+		 return null; 
+	}
+	
+	public Item SearchItemsInCategory(Category cg1, String ItemName) {
+		 for(int i = 0; i < cg1.getItems().size(); i++) {
+			 if(cg1.getItems().get(i).getName().equals(ItemName)) {
+			  return cg1.getItems().get(i); 
+			 }
+		 }
+		 return null; 
+	}
+	
+	
+	//Print Categories
+	public void PrintCategories(ArrayList<Category> Categories) {
+		for(int i = 0; i < Categories.size(); i++) {
+			System.out.println(Categories.get(i).getName());
+		}
+	}
+	
+	//Print All items in a specific Category
+	public void PrintItemsInCategory(Category cg1) {
+	    for(int i = 0; i < cg1.getItems().size(); i++) {
+	    	System.out.println(cg1.getItems().get(i).getName()); 
+	    }
+	}
+	
 	
 }

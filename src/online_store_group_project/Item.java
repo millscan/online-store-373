@@ -21,6 +21,7 @@ public class Item implements Comparable<Item> {
 		this.name = name;
 		this.description = description;
 		this.category = category;
+		category.addItem(this); 
 		this.price = price;
 		this.quantity = quantity;
 		}
