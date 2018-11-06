@@ -22,7 +22,7 @@ public class StoreDataIO {
 	public static ArrayList<User> LoadUsers(Store s) {
 		File usersFile = new File("users.csv");
 		FileInputStream inStream = null;
-		byte userData[] = new byte[1000];
+		byte userData[] = new byte[10000];
 		String csvText = null;
 		String[] csvLines;
 		ArrayList<User> users = new ArrayList<User>();
@@ -45,34 +45,33 @@ public class StoreDataIO {
 			csvLines = csvText.split("\n");
 			
 			for(String csvLine : csvLines) {
+				System.out.println(csvLine);
 				String parsedUserData[] = csvLine.split(",");
-				for(String data : parsedUserData) {
-					switch(parsedUserData[0]) {
-						case "Customer":
-							users.add(new Customer(
-									s,
-									parsedUserData[1], 
-									parsedUserData[2], 
-									parsedUserData[3],
-									parsedUserData[4],
-									parsedUserData[5]
-							));
-							break;
-						case "Owner":
-							users.add(new Owner(
+				switch(parsedUserData[0]) {
+					case "Customer":
+						users.add(new Customer(
 								s,
 								parsedUserData[1], 
 								parsedUserData[2], 
 								parsedUserData[3],
 								parsedUserData[4],
 								parsedUserData[5]
-							));
-							break;
-						default:
-							break;
-					}
-
+						));
+						break;
+					case "Owner":
+						users.add(new Owner(
+							s,
+							parsedUserData[1], 
+							parsedUserData[2], 
+							parsedUserData[3],
+							parsedUserData[4],
+							parsedUserData[5]
+						));
+						break;
+					default:
+						break;
 				}
+
 			}
 			//System.out.println(csvText);
 		}		
@@ -93,14 +92,26 @@ public class StoreDataIO {
 		return users;
 	}
 		
-	public static FileErrorCodes storeUserData(User u) {		
+	public static FileErrorCodes storeUserData(Store s, User u) {		
 		
-		File usersFile = new File("users.csv");
-		FileInputStream inStream = null;
 		FileOutputStream outStream = null;
 		String csvLine = new String();
-		byte userData[] = new byte[1000];
-		String userType = u.getClass().getSimpleName();
+		String userType = u.getClass().getSimpleName().trim();
+		File userDataFile;
+		File userDataFolder = new File("userData/" + u.getUsername());
+		
+		File usersFile = new File("users.csv");
+		System.out.println(userType);
+		if(userType.equals("Customer")) {
+			userDataFile = new File("userData/" + u.getUsername() + "/orders.csv");
+		}
+		else {
+			userDataFile = new File("userData/" + u.getUsername() + "/items.csv");
+		}
+		
+		if(!userDataFolder.exists()) {
+			userDataFolder.mkdir();
+		}
 		
 		//make sure file is working
 		if(!usersFile.exists()) {
@@ -112,59 +123,52 @@ public class StoreDataIO {
 			}
 		}
 		
-		//get last version of csv
-		try {
-			inStream = new FileInputStream(usersFile);
-			inStream.read(userData);
-			csvLine = (new String(userData)).trim();
-			if(csvLine.length() != 0) {
-				csvLine += '\n';
+		if(!userDataFile.exists()) {
+			try {
+				userDataFile.createNewFile();
 			}
-			//System.out.println(csvLine);
-		}
-		catch(FileNotFoundException e) {
-			return FileErrorCodes.FileError;
-		}
-		catch(IOException e) {
-			return FileErrorCodes.FileError;
+			catch(IOException e) {
+				return FileErrorCodes.OutputError;
+			}
 		}
 		
+		csvLine = getCsvString(usersFile);	
+
 			
-		//setup output stream
+		//setup output stream to input user to csv file
 		try {
 			outStream = new FileOutputStream(usersFile);
 		}
 		catch(FileNotFoundException e) {
-			try {
-				inStream.close();
-			}
-			catch(IOException ie){
-				return FileErrorCodes.FileError;
-			}
 			return FileErrorCodes.FileError;
 		}
 		
 		//TODO: Use payson's function to check if username/email exists
 		
-		csvLine = String.format("%s%s,%s,%s,%s,%s,%s",csvLine, userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
-		//System.out.println(csvLine);
+		//WRITE USER DATA TO USERS.CSV
+		String userCsvString = String.format("%s,%s,%s,%s,%s,%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
 		
-		try {
-			outStream.write(csvLine.getBytes());
+		if(csvLine.contains(userCsvString)) {
+			System.out.println("User already in users file");
 		}
-		catch(IOException e) {
-			try {
-				inStream.close();
-				outStream.close();
-			}
-			catch(IOException ie){
-				return FileErrorCodes.FileError;
-			}
-			return FileErrorCodes.OutputError;
+		else {
+			csvLine = String.format("%s%s,%s,%s,%s,%s,%s",csvLine, userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
+			WriteStringToFile(outStream, csvLine);
 		}
 		
+		//WRITE USER ITEMS/ORDERS to {username}/items or {username}/orders
+		String userElementsString = new String();
+		if(userType.equals("Customer")) {
+			for(Order o : ((Customer)u).getOrders()) {
+				
+			}
+		}
+		else {
+			userDataFile = new File("userData/" + u.getUsername() + "/items.csv");
+		}
+		
+		
 		try {
-			inStream.close();
 			outStream.close();
 		}
 		catch(IOException ie){
@@ -172,5 +176,54 @@ public class StoreDataIO {
 		}
 		return FileErrorCodes.Success;
 		
+	}
+	
+	
+	public static String getCsvString(File file) {
+		byte userData[] = new byte[1000];
+		String csvLine;
+		FileInputStream inStream = null;
+		
+		//get last version of csv
+		try {
+			inStream = new FileInputStream(file);
+			inStream.read(userData);
+			csvLine = (new String(userData)).trim();
+			if(csvLine.length() != 0) {
+				csvLine += '\n';
+			}
+			inStream.close();
+			return csvLine;
+			//System.out.println(csvLine);
+		}
+		catch(IOException e) {
+			System.out.println("Problems getting lines from csv file");
+			return null;
+		}
+	}
+	
+	public static String[] getLinesFromCsv(File file) {
+		String csvLine;
+		
+		//get last version of csv
+		csvLine = getCsvString(file);
+		return csvLine.split("\n");
+		//System.out.println(csvLine);
+	}
+	
+	public static FileErrorCodes WriteStringToFile(FileOutputStream fOut, String s) {
+		try {
+			fOut.write(s.getBytes());
+		}
+		catch(IOException e) {
+			try {
+				fOut.close();
+			}
+			catch(IOException ie){
+				return FileErrorCodes.FileError;
+			}
+			return FileErrorCodes.OutputError;
+		}
+		return FileErrorCodes.Success;
 	}
 }

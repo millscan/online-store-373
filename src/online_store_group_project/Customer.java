@@ -26,6 +26,10 @@ public class Customer extends User {
 		return this.orders.size();
 	}
 	
+	public ArrayList<Order> getOrders(){
+		return this.orders;
+	}
+	
 	public void addOrder(Order order) {
 		orders.add(order);
 	}

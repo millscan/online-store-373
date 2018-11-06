@@ -41,7 +41,7 @@ public class DataStorageTestDriver {
 		usersToSave.add(o5);
 		
 		for(User u : usersToSave) {
-			StoreDataIO.storeUserData(u);
+			StoreDataIO.storeUserData(s1, u);
 		}
 		
 		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s1);
