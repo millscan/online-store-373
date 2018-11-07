@@ -96,6 +96,7 @@ public class DataStorageInitializer {
 			System.out.println(u.toDisplayString());
 		}
 		System.out.println();
+		System.out.println("\n\n\n\n\n");
 		
 		StoreDataIO.storeAllUsers(s1);
 		
@@ -103,15 +104,17 @@ public class DataStorageInitializer {
 		for(User u : s1.getUsers()) {
 			System.out.println(u.toDisplayString());
 		}
-		System.out.println();
-
-		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s1);
+		System.out.println("\n\n\n\n\n");
 		
-		System.out.println("Printing users after load:");
-		for(User u : s1.getUsers()) {
+		Store s2 = new Store();
+		StoreDataIO.LoadUsers(s2);
+		
+		System.out.println("Printing users after loading into another store:");
+		for(User u : s2.getUsers()) {
 			System.out.println(u.toDisplayString());
 		}
 		System.out.println();
+		System.out.println("\n\n\n\n\n");
 		
 
 	}

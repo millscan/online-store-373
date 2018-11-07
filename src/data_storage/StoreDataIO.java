@@ -32,7 +32,7 @@ public class StoreDataIO {
 	
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 	
-	public static ArrayList<Owner> LoadOwners(Store store) {
+	public static void LoadOwners(Store store) {
 		File usersFile = new File("users.csv");
 		ArrayList<Owner> owners = new ArrayList<Owner>();
 		String[] csvLines = getLinesFromCsv("users.csv");
@@ -61,11 +61,10 @@ public class StoreDataIO {
 			}
 			
 		}
-		
-		return owners;
+		store.owners = owners;
 	}
 	
-	public static ArrayList<Customer> LoadCustomers(Store store){
+	public static void LoadCustomers(Store store){
 		File usersFile = new File("users.csv");
 		ArrayList<Customer> customers = new ArrayList<Customer>();
 		String[] csvLines = getLinesFromCsv("users.csv");
@@ -93,16 +92,12 @@ public class StoreDataIO {
 
 			}	
 		}
-		
-		return customers;
+		store.customers = customers;
 	}
 	
-	public static ArrayList<User> LoadUsers(Store store) {
-		
-		ArrayList<User> users = new ArrayList<User>();
-		users.addAll(LoadOwners(store));
-		users.addAll(LoadCustomers(store));
-		return users;
+	public static void LoadUsers(Store store) {
+		LoadOwners(store);
+		LoadCustomers(store);
 	}
 	
 	public static ArrayList<Order> getOrdersFromPath(Store store, String orderFoldersPath){
