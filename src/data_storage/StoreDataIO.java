@@ -54,7 +54,7 @@ public class StoreDataIO {
 		//for user csv line, create user and add appropriate orders/items
 		for(String csvLine : csvLines) {
 			//System.out.println(csvLine);
-			String parsedUserData[] = csvLine.split(",");
+			String parsedUserData[] = csvLine.split("#");
 			switch(parsedUserData[0]) {
 				case "Customer":
 					Customer customer = new Customer(
@@ -95,23 +95,22 @@ public class StoreDataIO {
 	public static ArrayList<Order> getOrdersFromPath(Store store, String orderFoldersPath){
 		
 		//get folders for each order
-		String[] orderFolderPaths = getSubdirectories(new File(orderFoldersPath));
+		String[] orderIds = getSubdirectories(new File(orderFoldersPath));
 		ArrayList<Order> orders = new ArrayList<Order>();
-		if(orderFolderPaths == null) {
+		if(orderIds == null) {
 			return orders;
 		}
 				
 		//for each order, get order data and item data
-		for(String folderPath : orderFolderPaths) {
-			String orderId = folderPath;
+		for(String orderId : orderIds) {
 			ArrayList<Item> orderItems = new ArrayList<Item>();
 			Date orderTimestamp;
 			boolean orderShipped;
 
-			String orderInfoString = getCsvString(folderPath + "/orderInfo.csv");
+			String orderInfoString = getCsvString(orderFoldersPath + "/" + orderId +  "/order-info.csv");
 			
 			try {
-				String[] orderInfoSplit = orderInfoString.split(",");
+				String[] orderInfoSplit = orderInfoString.split("#");
 				orderTimestamp = dateFormat.parse(orderInfoSplit[0]);
 				orderShipped = (orderInfoSplit[1] == "true") ? true : false;
 			}
@@ -139,7 +138,7 @@ public class StoreDataIO {
 		
 		//STRING FORMAT: id, seller id, name, description, category, price, quantity
 		for(String itemDataString : itemDataStrings) {
-			String[] itemDataSplit = itemDataString.split(",");
+			String[] itemDataSplit = itemDataString.split("#");
 			//Item readItem = new Item(itemDataSplit[0], itemDataSplit[1], itemDataSplit[2], itemDataSplit[3], itemDataSplit[4], itemDataSplit[5], itemDataSplit[6]);
 		}
 		return items;
@@ -158,18 +157,18 @@ public class StoreDataIO {
 		
 		//WRITE USER DATA TO USERS.CSV
 		System.out.println(userCsvText);
-		String userCsvLine = String.format("%s,%s,%s,%s,%s,%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
+		String userCsvLine = String.format("%s#%s#%s#%s#%s#%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
 		
 		if(userCsvText.contains(userCsvLine)) {
 			System.out.println("User already in users file");
 		}
 		else {
-			appendLineToFile("users.csv", userCsvLine);
+			writeLineToFile("users.csv", userCsvLine, true);
 		}
 		
 		//WRITE USER ITEMS/ORDERS to {username}/items or {username}/orders
 		if(userType.equals("Customer")) {
-			//storeCustomerOrders((Customer)u);			
+			storeCustomerOrders((Customer)u);			
 		}
 		else {
 			//HANDLE ITEMS FOR OWNERS
@@ -189,21 +188,23 @@ public class StoreDataIO {
 		
 		for(Order o : customer.getOrders()) {
 			String orderFolderPath = ordersPath + "/" + o.getID();
+			File orderFolderFile = new File(orderFolderPath);
+			if(!orderFolderFile.exists()) {
+				orderFolderFile.mkdirs();
+			}
 
-			String orderInfoString = String.format("%s,%s,%s", o.getID(), dateFormat.format(o.getTimestamp()), o.getShippedStatus());
-			WriteStringToFile(orderFolderPath + "/orderInfo.csv", orderInfoString);
+			String orderInfoString = String.format("%s#%s",dateFormat.format(o.getTimestamp()), o.getShippedStatus());
+			String orderInfoFilePath = orderFolderPath + "/order-info.csv";
+			writeLineToFile(orderInfoFilePath, orderInfoString, false);
 			
-			String orderItemsFilePath = orderFolderPath + "/items.csv";
-			File orderItemsFile = new File(orderItemsFilePath);
-			createFile(orderItemsFile);
+			String orderItemsFilePath = orderFolderPath + "/order-items.csv";
 			
-			String orderItemsCsvString = new String();
 			
 			for(Item i: o.getItems()){
 				//STRING FORMAT: id, seller id, name, description, category, price, quantity
-				orderItemsCsvString = orderItemsCsvString.concat(String.format("%s,%s,%s,%s,%s,%s,%s%n", 
-						i.getID(), i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory().getName(), i.getPrice(), i.getQuantity()));
-				appendLineToFile(orderItemsFilePath, orderItemsCsvString);
+				String itemString = String.format("%s#%s#%s#%s#%s#%s#%s", 
+						i.getID(), i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory().getName(), i.getPrice(), i.getQuantity());
+						writeLineToFile(orderItemsFilePath, itemString, true);
 			}
 		}
 	}
@@ -303,11 +304,12 @@ public class StoreDataIO {
 		return FileErrorCodes.Success;
 	}
 	
-	public static void appendLineToFile(String filePath, String line) {
+	public static void writeLineToFile(String filePath, String line, boolean append) {
 	//create file if doesnt exist
-	createFile(new File(filePath));
+	File file = new File(filePath);
+	createFile(file);
 	
-	try(FileWriter fw = new FileWriter(filePath, true);
+	try(FileWriter fw = new FileWriter(filePath, append);
 		    BufferedWriter bw = new BufferedWriter(fw);
 		    PrintWriter out = new PrintWriter(bw))
 		{

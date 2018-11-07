@@ -82,7 +82,9 @@ public class DataStorageTestDriver {
 			StoreDataIO.storeUserData(s1, u);
 		}
 		
-		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s1);
+		Store s2 = new Store();
+		
+		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s2);
 		System.out.println("Printing users:");
 		for(User u : loadedUsers) {
 			System.out.println(u.getUsername());
