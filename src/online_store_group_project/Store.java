@@ -209,6 +209,18 @@ public class Store {
 		System.out.println("");
 	}
 	
+	/*
+	public double PrintCart(ArrayList<Item> items) {
+		 for(int i = 0; i < items.size(); i++) {
+	     System.out.println("Cart:");
+	     System.out.println("");
+	    
+	     return 20.0
+		 }
+	} */
+	
+	//Other Getters 
+	
 	public Customer getCustomerById(String id) {
 		for(Customer c : this.customers) {
 			if(c.getId().equals(id)) return c;
