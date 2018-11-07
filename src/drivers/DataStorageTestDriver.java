@@ -83,10 +83,10 @@ public class DataStorageTestDriver {
 		}
 		
 		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s1);
-		//System.out.println("Printing users:");
-//		for(User u : loadedUsers) {
-//			//System.out.println(u.getUsername());
-//		}
+		System.out.println("Printing users:");
+		for(User u : loadedUsers) {
+			System.out.println(u.getUsername());
+		}
 	}
 
 }

@@ -1,11 +1,16 @@
 package data_storage;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,10 +34,7 @@ public class StoreDataIO {
 	
 	public static ArrayList<User> LoadUsers(Store store) {
 		File usersFile = new File("users.csv");
-		FileInputStream inStream = null;
-		byte userData[] = new byte[10000];
 		String csvText = null;
-		String[] csvLines;
 		ArrayList<User> users = new ArrayList<User>();
 		
 		System.out.println("Loading users...");
@@ -43,18 +45,11 @@ public class StoreDataIO {
 			return null;
 		}
 		
-		csvText = getCsvString(usersFile);
+		csvText = getCsvString("users.csv");
+
+		String[] csvLines = csvText.split("\n");
 		
-		//get last version of csv
-		csvText = (new String(userData)).trim();
-		if(csvText.length() != 0) {
-			csvText += '\n';
-		}
-		else {
-			System.out.println("No users data in file");
-			return null;
-		}
-		csvLines = csvText.split("\n");
+		System.out.println(csvText);
 		
 		//for user csv line, create user and add appropriate orders/items
 		for(String csvLine : csvLines) {
@@ -102,6 +97,9 @@ public class StoreDataIO {
 		//get folders for each order
 		String[] orderFolderPaths = getSubdirectories(new File(orderFoldersPath));
 		ArrayList<Order> orders = new ArrayList<Order>();
+		if(orderFolderPaths == null) {
+			return orders;
+		}
 				
 		//for each order, get order data and item data
 		for(String folderPath : orderFolderPaths) {
@@ -110,8 +108,7 @@ public class StoreDataIO {
 			Date orderTimestamp;
 			boolean orderShipped;
 
-			File orderInfoFile = new File(folderPath + "/orderInfo.csv");
-			String orderInfoString = getCsvString(orderInfoFile);
+			String orderInfoString = getCsvString(folderPath + "/orderInfo.csv");
 			
 			try {
 				String[] orderInfoSplit = orderInfoString.split(",");
@@ -136,9 +133,9 @@ public class StoreDataIO {
 		return orders;
 	}
 	
-	public static ArrayList<Item> getItemsFromItemFile(Store store, File itemsFile){
+	public static ArrayList<Item> getItemsFromItemFile(Store store, String itemsFilePath){
 		ArrayList<Item> items = new ArrayList<Item>();
-		String[] itemDataStrings = getCsvString(itemsFile).split("\n");
+		String[] itemDataStrings = getCsvString(itemsFilePath).split("\n");
 		
 		//STRING FORMAT: id, seller id, name, description, category, price, quantity
 		for(String itemDataString : itemDataStrings) {
@@ -150,72 +147,29 @@ public class StoreDataIO {
 		
 	public static FileErrorCodes storeUserData(Store s, User u) {		
 
-		String csvLine = new String();
+		String userCsvText = new String();
 		String userType = u.getClass().getSimpleName().trim();
-		File userDataFolder;
+	
+		//make sure file is working		
 		
-		File usersFile = new File("users.csv");
-		//System.out.println(userType);
-		userDataFolder = new File("userData/" + u.getUsername());
-
-		
-		if(!userDataFolder.exists()) {
-			userDataFolder.mkdir();
-		}
-		
-		//make sure file is working
-		createFile(usersFile);
-		
-		
-		csvLine = getCsvString(usersFile);	
+		userCsvText = getCsvString("users.csv");	
 		
 		//TODO: Use payson's function to check if username/email exists
 		
 		//WRITE USER DATA TO USERS.CSV
-		String userCsvString = String.format("%s,%s,%s,%s,%s,%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
+		System.out.println(userCsvText);
+		String userCsvLine = String.format("%s,%s,%s,%s,%s,%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
 		
-		if(csvLine.contains(userCsvString)) {
+		if(userCsvText.contains(userCsvLine)) {
 			System.out.println("User already in users file");
 		}
 		else {
-			csvLine = String.format("%s%s,%s,%s,%s,%s,%s",csvLine, userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
-			WriteStringToFile(usersFile, csvLine);
+			appendLineToFile("users.csv", userCsvLine);
 		}
 		
 		//WRITE USER ITEMS/ORDERS to {username}/items or {username}/orders
-		String userElementsString = new String();
 		if(userType.equals("Customer")) {
-			String ordersPath = "userData/" + u.getUsername() + "/orders";
-			File ordersFolder = new File(ordersPath);
-			if(!ordersFolder.exists()) {
-				ordersFolder.mkdir();
-			}
-			for(Order o : ((Customer)u).getOrders()) {
-				String orderFolderPath = ordersPath + "/" + o.getID();
-				File orderFolder = new File(orderFolderPath);
-				File orderInfoFile = new File(orderFolderPath + "/orderInfo.csv");
-				if(!orderFolder.exists()) {
-					orderFolder.mkdirs();
-				}
-				
-				createFile(orderInfoFile);
-				String orderInfoString = String.format("%s,%s,%s", o.getID(), dateFormat.format(o.getTimestamp()), o.getShippedStatus());
-				WriteStringToFile(orderInfoFile, orderInfoString);
-				
-				String orderItemsFilePath = orderFolderPath + "/items.csv";
-				File orderItemsFile = new File(orderItemsFilePath);
-				createFile(orderItemsFile);
-				
-				String orderItemsCsvString = new String();
-				
-				for(Item i: o.getItems()){
-					//STRING FORMAT: id, seller id, name, description, category, price, quantity
-					orderItemsCsvString = orderItemsCsvString.concat(String.format("%s,%s,%s,%s,%s,%s,%s%n", 
-							i.getID(), i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory().getName(), i.getPrice(), i.getQuantity()));
-				}
-				
-				WriteStringToFile(orderItemsFile, orderItemsCsvString);
-			}
+			//storeCustomerOrders((Customer)u);			
 		}
 		else {
 			//HANDLE ITEMS FOR OWNERS
@@ -223,6 +177,35 @@ public class StoreDataIO {
 
 		return FileErrorCodes.Success;
 		
+	}
+	
+	public static void storeCustomerOrders(Customer customer) {
+		String ordersPath = "userData/" + customer.getUsername() + "/orders";
+		
+		File orderFolder = new File(ordersPath);
+		if(!orderFolder.exists()) {
+			orderFolder.mkdirs();
+		}
+		
+		for(Order o : customer.getOrders()) {
+			String orderFolderPath = ordersPath + "/" + o.getID();
+
+			String orderInfoString = String.format("%s,%s,%s", o.getID(), dateFormat.format(o.getTimestamp()), o.getShippedStatus());
+			WriteStringToFile(orderFolderPath + "/orderInfo.csv", orderInfoString);
+			
+			String orderItemsFilePath = orderFolderPath + "/items.csv";
+			File orderItemsFile = new File(orderItemsFilePath);
+			createFile(orderItemsFile);
+			
+			String orderItemsCsvString = new String();
+			
+			for(Item i: o.getItems()){
+				//STRING FORMAT: id, seller id, name, description, category, price, quantity
+				orderItemsCsvString = orderItemsCsvString.concat(String.format("%s,%s,%s,%s,%s,%s,%s%n", 
+						i.getID(), i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory().getName(), i.getPrice(), i.getQuantity()));
+				appendLineToFile(orderItemsFilePath, orderItemsCsvString);
+			}
+		}
 	}
 	
 	public static void createFile(File f) {
@@ -238,34 +221,39 @@ public class StoreDataIO {
 	}
 	
 	
-	public static String getCsvString(File file) {
-		byte userData[] = new byte[1000];
+	public static String getCsvString(String filePath) {
 		String csvLine;
-		FileInputStream inStream = null;
+		String csvText = new String();
+		BufferedReader reader;
 		
 		//get last version of csv
 		try {
-			inStream = new FileInputStream(file);
-			inStream.read(userData);
-			csvLine = (new String(userData)).trim();
-			if(csvLine.length() != 0) {
-				csvLine += '\n';
+			reader = new BufferedReader(new FileReader(filePath));
+			csvLine = reader.readLine();
+			while(csvLine != null) {
+				csvText = csvText.concat(csvLine + "\n");
+				csvLine = reader.readLine();
 			}
-			inStream.close();
-			return csvLine;
+			
+			if(csvText.length() != 0) {
+				csvText += '\n';
+			}
+			reader.close();
 			//System.out.println(csvLine);
 		}
 		catch(IOException e) {
 			System.out.println("Problems getting lines from csv file");
 			return null;
 		}
+		
+		return csvText;
 	}
 	
-	public static String[] getLinesFromCsv(File file) {
+	public static String[] getLinesFromCsv(String filePath) {
 		String csvLine;
 		
 		//get last version of csv
-		csvLine = getCsvString(file);
+		csvLine = getCsvString(filePath);
 		return csvLine.split("\n");
 		//System.out.println(csvLine);
 	}
@@ -280,9 +268,11 @@ public class StoreDataIO {
 		return directories;
 	}
 	
-	public static FileErrorCodes WriteStringToFile(File file, String s) {
+	public static FileErrorCodes WriteStringToFile(String filePath, String s) {
 		FileOutputStream fOut;
 		try {
+			File file = new File(filePath);
+			createFile(file);
 			fOut = new FileOutputStream(file);
 		}
 		catch(IOException e) {
@@ -311,6 +301,20 @@ public class StoreDataIO {
 		}
 		
 		return FileErrorCodes.Success;
+	}
+	
+	public static void appendLineToFile(String filePath, String line) {
+	//create file if doesnt exist
+	createFile(new File(filePath));
+	
+	try(FileWriter fw = new FileWriter(filePath, true);
+		    BufferedWriter bw = new BufferedWriter(fw);
+		    PrintWriter out = new PrintWriter(bw))
+		{
+		    out.println(line);
+		} catch (IOException e) {
+		    System.out.println("Error appending line to file. IOException");
+		}
 	}
 	
 }
