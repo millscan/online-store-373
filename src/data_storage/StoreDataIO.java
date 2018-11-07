@@ -98,19 +98,19 @@ public class StoreDataIO {
 		String csvLine = new String();
 		String userType = u.getClass().getSimpleName().trim();
 		File userDataFile;
-		File userDataFolder = new File("userData/" + u.getUsername());
+		File userDataFolder;
 		
 		File usersFile = new File("users.csv");
 		System.out.println(userType);
 		if(userType.equals("Customer")) {
-			userDataFile = new File("userData/" + u.getUsername() + "/orders.csv");
+			userDataFolder = new File("userData/" + u.getUsername() + "/orders");
 		}
 		else {
-			userDataFile = new File("userData/" + u.getUsername() + "/items.csv");
+			userDataFolder = new File("userData/" + u.getUsername() + "/items");
 		}
 		
 		if(!userDataFolder.exists()) {
-			userDataFolder.mkdir();
+			userDataFolder.mkdirs();
 		}
 		
 		//make sure file is working
@@ -123,14 +123,6 @@ public class StoreDataIO {
 			}
 		}
 		
-		if(!userDataFile.exists()) {
-			try {
-				userDataFile.createNewFile();
-			}
-			catch(IOException e) {
-				return FileErrorCodes.OutputError;
-			}
-		}
 		
 		csvLine = getCsvString(usersFile);	
 
@@ -159,6 +151,10 @@ public class StoreDataIO {
 		//WRITE USER ITEMS/ORDERS to {username}/items or {username}/orders
 		String userElementsString = new String();
 		if(userType.equals("Customer")) {
+			File ordersFolder = new File("userData" + u.getUsername() + "/orders" );
+			if(!ordersFolder.exists()) {
+				ordersFolder.mkdir();
+			}
 			for(Order o : ((Customer)u).getOrders()) {
 				
 			}

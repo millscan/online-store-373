@@ -1,18 +1,25 @@
 package online_store_group_project;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.ArrayList;
 
 public class Order {
 
+	private String id;
 	private ArrayList<Item> items;
 	private Date timestamp;
 	private boolean shipped;
-	
+
 	public Order() {
+		id = UUID.randomUUID().toString();
 		this.items = new ArrayList<Item>();
 		this.timestamp = new Date();
 		this.shipped = false;
+	}
+	
+	public String getID() {
+		return this.id;
 	}
 	
 	public void addItem(Item item) {
