@@ -2,29 +2,28 @@ package online_store_group_project;
 
 import java.util.UUID;
 
-public class Item implements Comparable<Item> {
+public class Item {
 	
 	private Store store; 
 	private String id;
 	private String name;
 	private String description;
-	private Category category;
+	private String category;
 	private double price;
 	private int quantity;
 	private Owner seller;
 	
 	
 	//Constructor
-	public Item(Store store, Owner seller, String name, String description, Category category, double price, int quantity) {
+	public Item(Store store, Owner seller, String name, String description, String category, double price, int quantity) {
 		
-		if(!store.itemExists(name)) {
+		if(!store.itemNameTaken(name)) {
 		this.id = UUID.randomUUID().toString();
 		this.store = store; 
 		this.seller = seller;
 		this.name = name;
 		this.description = description;
 		this.category = category;
-		category.addItem(this); 
 		this.price = price;
 		this.quantity = quantity;
 		}
@@ -35,16 +34,16 @@ public class Item implements Comparable<Item> {
 	}
 	
 	//Constructor for creating items with stored data
-	public Item(String id, Store store, Owner seller, String name, String description, Category category, double price, int quantity) {
+	public Item( Store store, String id, Owner seller, String name, String description, String category, double price, int quantity) {
 		
-		if(!store.itemExists(name)) {
+		//TODO: we should probably check if item name is taken before calling constructor
+		if(!store.itemNameTaken(id)) {
 		this.id = id;
 		this.store = store; 
 		this.seller = seller;
 		this.name = name;
 		this.description = description;
 		this.category = category;
-		category.addItem(this); 
 		this.price = price;
 		this.quantity = quantity;
 		}
@@ -55,7 +54,7 @@ public class Item implements Comparable<Item> {
 	}
 	
 	
-	public String getID() {
+	public String getId() {
 		return this.id;
 	}
 	
@@ -85,11 +84,11 @@ public class Item implements Comparable<Item> {
 		return this.description;
 	}
 	
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
@@ -110,9 +109,13 @@ public class Item implements Comparable<Item> {
 	}
 	
 	//Over-riding compare method to sort Items alphabetically by name
-	public int compareTo(Item i1) {
+//	public int compareTo(Item i1) {
+//	
+//		return this.getName().compareTo(i1.getName());
+//	}	
 	
-		return this.getName().compareTo(i1.getName());
-	}	
-		
+	public static void printItemInfo(Item i) {
+		System.out.println(String.format("Name: %s %n Description: %s %n Price %s %n Quantity %s %n", i.getName(), i.getDescription(), i.getPrice(), i.getQuantity()));
+	}
+	
 }

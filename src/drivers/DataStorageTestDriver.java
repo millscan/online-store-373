@@ -28,13 +28,13 @@ public class DataStorageTestDriver {
 		Owner o5 = new Owner(s1, "VideoGameMasters", "VideoJuegos@example.com", "Jimmy", "Carter", "CarterTown"); 
 		
 		//Create Categories 
-		Category cg1 = new Category("Other"); 
-		Category cg2 = new Category("Computers"); 
-		Category cg3 = new Category("Electronic Accessories"); 
-		Category cg4 = new Category("Shoes"); 
-		Category cg5 = new Category("Shirts"); 
-		Category cg6 = new Category("Beauty"); 
-		Category cg7 = new Category("Video Games"); 
+		String cg1 = "Other"; 
+		String cg2 = "Computers"; 
+		String cg3 = "Electronic Accessories"; 
+		String cg4 = "Shoes"; 
+		String cg5 = "Shirts"; 
+		String cg6 = "Beauty"; 
+		String cg7 = "Video Games"; 
 		
 		//Create Items
 		Item i1 = new Item(s1, o1, "American Flag" , "Large American Flag" , cg1, 16.00, 1);
@@ -79,7 +79,7 @@ public class DataStorageTestDriver {
 		usersToSave.add(o5);
 		
 		for(User u : usersToSave) {
-			StoreDataIO.storeUserData(s1, u);
+			StoreDataIO.storeUserData(u);
 		}
 		
 		Store s2 = new Store();

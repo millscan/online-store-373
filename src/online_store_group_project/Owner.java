@@ -24,7 +24,22 @@ public class Owner extends User {
 	}
 	
 	public void addItem(Item item) {
+		
+		if(store.items.contains(item)) {
+			System.out.println("Item already exists. Not added to store");
+			return;
+		}
+		if(store.itemNameTaken(item.getId())) {
+			System.out.println("Item name taken, not added to the store");
+			return;
+		}
+		store.items.add(item);
 		this.items.add(item);
+	}
+	
+	public void removeItem(Item item) {
+		this.items.remove(item);
+		store.items.remove(item);
 	}
 
 	public ArrayList<Rating> getRatings() {

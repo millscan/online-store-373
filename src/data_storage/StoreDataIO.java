@@ -49,7 +49,7 @@ public class StoreDataIO {
 
 		String[] csvLines = csvText.split("\n");
 		
-		System.out.println(csvText);
+		//System.out.println(csvText);
 		
 		//for user csv line, create user and add appropriate orders/items
 		for(String csvLine : csvLines) {
@@ -67,7 +67,7 @@ public class StoreDataIO {
 					);
 
 					String orderFoldersPath = "userData/" + customer.getUsername() + "/orders";
-					ArrayList<Order> customerOrders = getOrdersFromPath(store, orderFoldersPath);
+					ArrayList<Order> customerOrders = getOrdersFromPath(orderFoldersPath);
 					customer.setOrders(customerOrders);					
 					users.add(customer);
 							
@@ -92,7 +92,7 @@ public class StoreDataIO {
 		return users;
 	}
 	
-	public static ArrayList<Order> getOrdersFromPath(Store store, String orderFoldersPath){
+	public static ArrayList<Order> getOrdersFromPath(String orderFoldersPath){
 		
 		//get folders for each order
 		String[] orderIds = getSubdirectories(new File(orderFoldersPath));
@@ -132,7 +132,7 @@ public class StoreDataIO {
 		return orders;
 	}
 	
-	public static ArrayList<Item> getItemsFromItemFile(Store store, String itemsFilePath){
+	public static ArrayList<Item> getItemsFromItemFile(String itemsFilePath){
 		ArrayList<Item> items = new ArrayList<Item>();
 		String[] itemDataStrings = getCsvString(itemsFilePath).split("\n");
 		
@@ -144,7 +144,7 @@ public class StoreDataIO {
 		return items;
 	}
 		
-	public static FileErrorCodes storeUserData(Store s, User u) {		
+	public static FileErrorCodes storeUserData(User u) {		
 
 		String userCsvText = new String();
 		String userType = u.getClass().getSimpleName().trim();
@@ -156,7 +156,7 @@ public class StoreDataIO {
 		//TODO: Use payson's function to check if username/email exists
 		
 		//WRITE USER DATA TO USERS.CSV
-		System.out.println(userCsvText);
+		//System.out.println(userCsvText);
 		String userCsvLine = String.format("%s#%s#%s#%s#%s#%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
 		
 		if(userCsvText.contains(userCsvLine)) {
@@ -203,7 +203,7 @@ public class StoreDataIO {
 			for(Item i: o.getItems()){
 				//STRING FORMAT: id, seller id, name, description, category, price, quantity
 				String itemString = String.format("%s#%s#%s#%s#%s#%s#%s", 
-						i.getID(), i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory().getName(), i.getPrice(), i.getQuantity());
+						i.getId(), i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory(), i.getPrice(), i.getQuantity());
 						writeLineToFile(orderItemsFilePath, itemString, true);
 			}
 		}

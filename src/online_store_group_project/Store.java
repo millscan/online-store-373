@@ -8,7 +8,7 @@ public class Store {
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Owner> owners = new ArrayList<Owner>(); 
 	public ArrayList<User> users = new ArrayList<User>(); 
-	public ArrayList<Category> categories = new ArrayList<Category>();
+	public ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Transaction> transactions;
 	private String url;
 	
@@ -38,51 +38,26 @@ public class Store {
 	
 	
     //All getter functions to display the items in the store//
-	
-	public ArrayList<Item> getItemsWithCategory(Category category){
-		ArrayList<Item> items = new ArrayList<Item>();
-		for(int i = 0; i < owners.size(); i++) {
-			for(int j = 0; j < owners.get(i).getItems().size(); j++) {
-				if(owners.get(i).getItems().get(j).getCategory().getName() == category.getName()) {
-				 items.add(owners.get(i).getItems().get(j)); }}}
-		
-		//Implement the Alphabetical Sort Function
-		
-		return items;
-	}
-	
+
 	//Get All the Categories contained in the store 
-	public ArrayList<Category> getCategories(){
-		ArrayList<Category> categories = new ArrayList<Category>();
-		boolean NewCategory = true; 
-	   
-		for(int i = 0; i < owners.size(); i++) {  //Iterate through all owners
-	       for(int j = 0; j < owners.get(i).getItems().size(); j++) { //Iterate through all items of specific owner
-	    	  Category category = owners.get(i).getItems().get(j).getCategory(); 
-	    	  if(!categories.isEmpty()) {  //Check if it is not the first Category to be added
-	    			  
-	    		for(int k = 0; k < categories.size(); k++) { //Iterate through all existing categories
-	    		  if(categories.get(k).getName() == category.getName()) {  //if Category already exists in list 
-	    	    	  NewCategory = false; }}
-	    		
-	    		  if(NewCategory) {  //If Category does not already exist in the list
-	    		    categories.add(category);}
-	    	  		  NewCategory = true;} //Reset Category boolean
-	    	  else { categories.add(category); }}} //First Category to be added 
+	public ArrayList<String> getCategories(){
+		ArrayList<String> categoryNames = new ArrayList<String>();
+		for(Item i : this.items) {
+			if(!categoryNames.contains(i.getCategory())) {
+				categoryNames.add(i.getCategory());
+			}
+		}
 		
-		return categories;
+		return categoryNames;
 	}
 	
 	//Get all the items contained in the store 
 	public ArrayList<Item> getAllItems(){
-		ArrayList<Item> items = new ArrayList<Item>();
-		for(int i = 0; i < owners.size(); i++) {  //Iterate through all owners
-		     for(int j = 0; j < owners.get(i).getItems().size(); j++) { //Iterate through all items of specific owner
-		    	 items.add(owners.get(i).getItems().get(j)); }}   //Add Item to the list 
-		return items;
-		}
+		return this.items;
+	}
 	
 	//Get all the featured items contained in the store 
+	//this is dope
 	public ArrayList<Item> getFeaturedItems() { //get 8 random items to display
 		ArrayList<Item> featuredItems = getAllItems();
 		if(featuredItems.size() < 6) {
@@ -114,33 +89,53 @@ public class Store {
 	}
 	
 	//Make sure item name is valid 
-	public boolean itemExists(String itemName) {
-		 ArrayList<Item> itemList =  this.getAllItems();
-		 for(int i = 0; i < itemList.size(); i++) {
-		     if(itemList.get(i).getName() == itemName) {
+	public boolean itemNameTaken(String itemName) {
+		 for(Item i : this.items) {
+		     if(i.getName() == itemName) {
 		     System.out.println("Item Name is already in use. Please chose a different name.");  
 		     return true; 
 		  }
 		}
 		return false;
 	}
-	//All Store Searches 
-	public Category SearchCategories(String CategoryName) {
-		 for(int i = 0; i < categories.size(); i++) {
-			 if(categories.get(i).getName().equals(CategoryName)) {
-				 return categories.get(i); 
-			 }
-		 }
-		 return null; 
+	
+	
+	// SEARCHING/BROWSING ITEMS
+	
+	//SEARCH ALL ITEMS
+	public ArrayList<Item> searchItems(String itemName){
+		ArrayList<Item> searchResults = new ArrayList<Item>();
+		for(Item item : this.items) {
+			if(item.getName().contains(itemName)) {
+				searchResults.add(item);
+			}
+		}
+		return searchResults;
 	}
 	
-	public Item SearchItemsInCategory(Category cg1, String ItemName) {
-		 for(int i = 0; i < cg1.getItems().size(); i++) {
-			 if(cg1.getItems().get(i).getName().equals(ItemName)) {
-			  return cg1.getItems().get(i); 
+	//GET ITEMS IN GIVEN CATEGORY
+	public ArrayList<Item> getItemsInCategory(String categoryName) {
+		ArrayList<Item> categoryItems = new ArrayList<Item>();
+		 for(Item item : this.items) {
+			 if(item.getCategory().equals(categoryName)) {
+				 categoryItems.add(item);
 			 }
 		 }
-		 return null; 
+		 return categoryItems; 
+	}
+	
+	//GET ITEMS IN GIVEN CATEGORY WITH SEARCH TERM
+	public ArrayList<Item> SearchItemsInCategory(String categoryName, String itemName) {
+		
+		//get category items
+		ArrayList<Item> searchResults = getItemsInCategory(categoryName);
+		 for(Item categoryItem : searchResults) {
+			 //if item not included in search, remove from items
+			 if(!categoryItem.getName().contains(itemName)) {
+				 searchResults.remove(categoryItem);
+			 }
+		 }
+		 return searchResults; 
 	}
 	
 	
