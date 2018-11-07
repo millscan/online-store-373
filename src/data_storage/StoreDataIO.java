@@ -127,8 +127,6 @@ public class StoreDataIO {
 			
 			String orderItemsPath = orderFoldersPath + "/" + orderId +  "/order-items.csv";
 			orderItems = getItemsFromItemFile(store, orderItemsPath);
-			System.out.println("LOADED ITEMS: ");
-			for(Item i : orderItems)System.out.println(i.getName());
 			
 			
 			//File orderItemsFile = new File(folderPath + "/items.csv");
@@ -148,7 +146,12 @@ public class StoreDataIO {
 		//STRING FORMAT: id, seller id, name, description, category, price, quantity
 		for(String itemDataString : itemDataStrings) {
 			String[] itemDataSplit = itemDataString.split("#");
-			Item readItem = new Item(store, itemDataSplit[0], itemDataSplit[1], itemDataSplit[2], itemDataSplit[3], itemDataSplit[4], itemDataSplit[5], itemDataSplit[6]);
+			try {
+				items.add(new Item(store, itemDataSplit[0], itemDataSplit[1], itemDataSplit[2], itemDataSplit[3], itemDataSplit[4], itemDataSplit[5], itemDataSplit[6]));
+			}
+			catch(IndexOutOfBoundsException e) {
+				System.out.println("Can't create item from this string: " + itemDataString);
+			}
 		}
 		return items;
 	}
