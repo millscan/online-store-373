@@ -28,6 +28,27 @@ public class Store {
 		return users;
 	}
 	
+	public Item getItemGivenName(String name) { 
+		for(int i = 0; i < items.size(); i++) {
+		  if(name.equals(items.get(i).getName())) {
+			  return items.get(i); 
+		  }
+		}
+		return null; 
+	}
+	
+	
+	
+	//GET ITEMS IN GIVEN CATEGORY
+	public ArrayList<Item> getItemsInCategory(String categoryName) {
+		ArrayList<Item> categoryItems = new ArrayList<Item>();
+		 for(Item item : this.items) {
+			 if(item.getCategory().equals(categoryName)) {
+				 categoryItems.add(item);
+			 }
+		 }
+		 return categoryItems; 
+	}
 
 	
 	//Alphabetical Sort Function 
@@ -115,18 +136,24 @@ public class Store {
 		return searchResults;
 	}
 	
-	//GET ITEMS IN GIVEN CATEGORY
-	public ArrayList<Item> getItemsInCategory(String categoryName) {
-		ArrayList<Item> categoryItems = new ArrayList<Item>();
-		 for(Item item : this.items) {
-			 if(item.getCategory().equals(categoryName)) {
-				 categoryItems.add(item);
-			 }
-		 }
-		 return categoryItems; 
-	}
+
 	
 	//GET ITEMS IN GIVEN CATEGORY WITH SEARCH TERM
+	
+	
+	public boolean SearchCategories(String Category) {
+		ArrayList<String> Categories = this.getCategories(); 
+		
+		for(int i = 0; i < Categories.size(); i++) {
+			if(Category.equals(Categories.get(i))) {
+				return true; 
+			}
+		}
+		
+		return false; 
+	}
+	
+	
 	public ArrayList<Item> SearchItemsInCategory(String categoryName, String itemName) {
 		
 		//get category items
@@ -140,19 +167,46 @@ public class Store {
 		 return searchResults; 
 	}
 	
+	//Item Exists within ArrayList 
+	public boolean ItemExists(ArrayList<Item> Items, String itemName) {
+		for(int i = 0; i < Items.size(); i++) {
+			if (itemName.equals(Items.get(i).getName())) {
+				return true; 
+			}
+		}
+		return false; 
+	}
 	
-	//Print Categories
-	public void PrintCategories(ArrayList<Category> Categories) {
+	//*Print Categories*//
+	
+	public void PrintCategories() {
+		ArrayList<String> Categories = new ArrayList<String>(); 
+		String newCategory; 
+		boolean exists = false; 
+		Categories = this.getCategories();
+        
 		for(int i = 0; i < Categories.size(); i++) {
-			System.out.println(Categories.get(i).getName());
+		System.out.println(Categories.get(i)); 
 		}
 	}
 	
 	//Print All items in a specific Category
-	public void PrintItemsInCategory(Category cg1) {
-	    for(int i = 0; i < cg1.getItems().size(); i++) {
-	    	System.out.println(cg1.getItems().get(i).getName()); 
+	public void PrintItems(ArrayList<Item> items) {
+	    for(int i = 0; i < items.size(); i++) {
+	    	System.out.println(items.get(i).getName()); 
 	    }
+	}
+	
+	public void PrintItemDetails(Item i1) {
+		System.out.println("");
+		System.out.println(i1.getName() + ":"); 
+		System.out.println("");
+		System.out.println("Price: $" + i1.getPrice()); 
+		System.out.println("Quantity: " + i1.getQuantity());
+		System.out.println("Category: " + i1.getCategory());
+		System.out.println("Item Description: " + i1.getDescription());
+		System.out.println("Seller: " + i1.getSeller().getFirstName() + i1.getSeller().getLastName());
+		System.out.println("");
 	}
 	
 	public Customer getCustomerById(String id) {

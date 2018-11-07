@@ -2,11 +2,11 @@ package drivers;
 import data_storage.StoreDataIO;
 import online_store_group_project.*;
 import java.util.*;
-import java.util.Scanner;
-import state_machines.*;
+
+import state_machine.*;
 
 
-public class Driver1 {
+public class Driver {
 	
 	public static void main(String args[]) {
 		
@@ -27,14 +27,15 @@ public class Driver1 {
 		Owner o4 = new Owner(s1, "BeautySuppliers", "beautifulwomen@example.com", "Marie", "Taylor", "Beauty123"); 
 		Owner o5 = new Owner(s1, "VideoGameMasters", "VideoJuegos@example.com", "Jimmy", "Carter", "CarterTown"); 
 		
+		
 		//Create Categories 
-		Category cg1 = new Category("Other"); 
-		Category cg2 = new Category("Computers"); 
-		Category cg3 = new Category("Electronic Accessories"); 
-		Category cg4 = new Category("Shoes"); 
-		Category cg5 = new Category("Shirts"); 
-		Category cg6 = new Category("Beauty"); 
-		Category cg7 = new Category("Video Games"); 
+		String cg1 = "Other"; 
+		String cg2 = "Computers"; 
+		String cg3 = "Electronic Accessories"; 
+		String cg4 = "Shoes"; 
+		String cg5 = "Shirts"; 
+		String cg6 = "Beauty"; 
+		String cg7 = "Video Games"; 
 		
 		//Create Items
 		Item i1 = new Item(s1, o1, "American Flag" , "Large American Flag" , cg1, 16.00, 1);
@@ -55,16 +56,16 @@ public class Driver1 {
 		o5.addItem(i7); 
 		
 		//Add All Users to the Store 
-		s1.users.add(o1); 
-		s1.users.add(o2);
-		s1.users.add(o3);
-		s1.users.add(o4);
-		s1.users.add(o5);
-		s1.users.add(c1); 
-		s1.users.add(c2);
-		s1.users.add(c3);
-		s1.users.add(c4);
-		s1.users.add(c5);
+		s1.owners.add(o1); 
+		s1.owners.add(o2);
+		s1.owners.add(o3);
+		s1.owners.add(o4);
+		s1.owners.add(o5);
+		s1.customers.add(c1); 
+		s1.customers.add(c2);
+		s1.customers.add(c3);
+		s1.customers.add(c4);
+		s1.customers.add(c5);
 		
 		//Add Owners to the Store 
 		s1.owners.add(o1); 
@@ -79,15 +80,7 @@ public class Driver1 {
 		s1.customers.add(c3);
 		s1.customers.add(c4);
 		s1.customers.add(c5);
-		
-		//Add Categories to the Store 
-		s1.categories.add(cg1); 
-		s1.categories.add(cg2); 
-		s1.categories.add(cg3); 
-		s1.categories.add(cg4); 
-		s1.categories.add(cg5); 
-		s1.categories.add(cg6); 
-		s1.categories.add(cg7); 
+
 		
 		//Testing all functions in the Store Class 
 		System.out.println("Test for getting the Categories, Items in a Category, all Items, and featured Items:"); 
@@ -95,21 +88,13 @@ public class Driver1 {
 		
 	    ArrayList<Category> Categories = new ArrayList<Category>(); 
 	    ArrayList<Item> Items = new ArrayList<Item>(); 
-	    
-		Categories = s1.getCategories(); 
-		Collections.sort(Categories);
+
 		
 	    System.out.println("Print All Categories:"); 
-	    for(int i = 0; i < Categories.size(); i++) { 
-	    System.out.println(Categories.get(i).getName()); }  
-	    System.out.println(""); 
-	    
-		Items = s1.getItemsWithCategory(cg2); 
+	    for(String c : s1.getCategories()) System.out.println(c);
 	    
 		System.out.println("Print Items in the Category-> Computers:"); 
-	    for(int i = 0; i < Items.size(); i++) {
-	    System.out.println(Items.get(i).getName());
-	    }
+	    for(Item i : s1.getItemsInCategory("Computers")) System.out.println(i.getName());
 	    System.out.println(""); 
 		
 	    Items = s1.getAllItems(); 
@@ -141,36 +126,76 @@ public class Driver1 {
 	    System.out.println(""); 
 	    
 	    //Testing Sorting Featured Items Alphabetically 
-	    Collections.sort(Items);  
+	    ArrayList<String> itemNames = new ArrayList<String>();
+	    for(Item i : s1.items) itemNames.add(i.getName());
+	    
+	    Collections.sort(itemNames);
 	    
 	    System.out.println("Sorted Featured Items:"); 
-	    for(int i = 0; i < Items.size(); i++) {
-	    System.out.println(Items.get(i).getName());
+	    for(int i = 0; i < itemNames.size(); i++) {
+	    System.out.println(itemNames.get(i));
 	    }
 	    System.out.println(""); 
 
 		System.out.println(StoreDataIO.storeUserData(c1));
 		
 		
+		
 		HomePage StartingPage = new HomePage(); 
 		PageState StateMachine = new PageState();
+		StateMachine.setStore(s1);
 		
 		
 		StateMachine.setPage(StartingPage);
 		
-		HomePage.nextPage(StateMachine); 
+		StartingPage.nextPage(StateMachine); 
 		int Identifier = 1; 
 		
 		boolean check = true;
-		while(check) {
+		while(true) {
 			check = false; 
-			Identifier = StateMachine.GetNextPage().getIdentifier(); 
+			Identifier = StateMachine.getNextPage().getIdentifier(); 
+			
+			if(Identifier == 1) {
+			HomePage homePage = new HomePage(); 
+			homePage.nextPage(StateMachine);
+			}
 			
 			if(Identifier == 2) {
 			CategoryPage categoryPage = new CategoryPage(); 
 			categoryPage.nextPage(StateMachine);
 			
 			check = true; 
+			}
+			
+			else if(Identifier == 3) {
+			FeaturedItemsPage featuredItemsPage = new FeaturedItemsPage(); 
+			featuredItemsPage.nextPage(StateMachine); 
+			}
+			
+			else if(Identifier == 4) {
+			SearchPage searchPage = new SearchPage(); 
+			searchPage.nextPage(StateMachine);
+			}
+			
+			else if(Identifier == 5) {
+			ItemsInCategoryPage itemsInCategoryPage = new ItemsInCategoryPage(); 
+			itemsInCategoryPage.nextPage(StateMachine);
+			}
+			
+			else if(Identifier == 6) {
+			ItemPage itemPage = new ItemPage(); 
+			itemPage.nextPage(StateMachine);
+			}
+			
+			else if(Identifier == 7) {
+			AddedCartPage addedCart = new AddedCartPage(); 
+			addedCart.nextPage(StateMachine);
+			}
+			
+			else if(Identifier == 8) {
+			CartPage cartPage = new CartPage(); 
+			cartPage.nextPage(StateMachine);
 			}
 			
 			
@@ -264,9 +289,9 @@ public class Driver1 {
 			
 		}
 		
-		
+		*/
 	}
-*/
+
 	
 	}
-}
+
