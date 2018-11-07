@@ -56,16 +56,16 @@ public class Driver1_newStoreStructure {
 		o5.addItem(i7); 
 		
 		//Add All Users to the Store 
-		s1.users.add(o1); 
-		s1.users.add(o2);
-		s1.users.add(o3);
-		s1.users.add(o4);
-		s1.users.add(o5);
-		s1.users.add(c1); 
-		s1.users.add(c2);
-		s1.users.add(c3);
-		s1.users.add(c4);
-		s1.users.add(c5);
+		s1.owners.add(o1); 
+		s1.owners.add(o2);
+		s1.owners.add(o3);
+		s1.owners.add(o4);
+		s1.owners.add(o5);
+		s1.customers.add(c1); 
+		s1.customers.add(c2);
+		s1.customers.add(c3);
+		s1.customers.add(c4);
+		s1.customers.add(c5);
 		
 		//Add Owners to the Store 
 		s1.owners.add(o1); 

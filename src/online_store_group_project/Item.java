@@ -34,18 +34,18 @@ public class Item {
 	}
 	
 	//Constructor for creating items with stored data
-	public Item( Store store, String id, Owner seller, String name, String description, String category, double price, int quantity) {
+	public Item( Store store, String id, String sellerId, String name, String description, String category, String price, String quantity) {
 		
 		//TODO: we should probably check if item name is taken before calling constructor
 		if(!store.itemNameTaken(id)) {
 		this.id = id;
 		this.store = store; 
-		this.seller = seller;
+		this.seller = store.getOwnerById(sellerId);
 		this.name = name;
 		this.description = description;
 		this.category = category;
-		this.price = price;
-		this.quantity = quantity;
+		this.price = Double.parseDouble(price);
+		this.quantity = Integer.parseInt(quantity);
 		}
 		
 		else {

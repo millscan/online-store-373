@@ -7,7 +7,6 @@ public class Store {
  
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Owner> owners = new ArrayList<Owner>(); 
-	public ArrayList<User> users = new ArrayList<User>(); 
 	public ArrayList<Item> items = new ArrayList<Item>();
 	private ArrayList<Transaction> transactions;
 	private String url;
@@ -23,7 +22,10 @@ public class Store {
 	}
 	
 	public ArrayList<User> getUsers(){
-		return users; 
+		ArrayList<User> users = new ArrayList<User>();
+		users.addAll(customers);
+		users.addAll(owners);
+		return users;
 	}
 	
 
@@ -151,6 +153,29 @@ public class Store {
 	    for(int i = 0; i < cg1.getItems().size(); i++) {
 	    	System.out.println(cg1.getItems().get(i).getName()); 
 	    }
+	}
+	
+	public Customer getCustomerById(String id) {
+		for(Customer c : this.customers) {
+			if(c.getId().equals(id)) return c;
+		}
+		return null;
+	}
+	
+	public Owner getOwnerById(String id) {
+		for(Owner o : this.owners) {
+			if(o.getId().equals(id)) return o;
+		}
+		return null;
+	}
+	
+	//Get user by id
+	public User getUserById(String id) {
+		User user = getCustomerById(id);
+		if(user != null) {
+			user = getOwnerById(id);
+		}
+		return user;
 	}
 	
 	

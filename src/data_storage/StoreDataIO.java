@@ -67,7 +67,7 @@ public class StoreDataIO {
 					);
 
 					String orderFoldersPath = "userData/" + customer.getUsername() + "/orders";
-					ArrayList<Order> customerOrders = getOrdersFromPath(orderFoldersPath);
+					ArrayList<Order> customerOrders = getOrdersFromPath(store, orderFoldersPath);
 					customer.setOrders(customerOrders);					
 					users.add(customer);
 							
@@ -92,7 +92,7 @@ public class StoreDataIO {
 		return users;
 	}
 	
-	public static ArrayList<Order> getOrdersFromPath(String orderFoldersPath){
+	public static ArrayList<Order> getOrdersFromPath(Store store, String orderFoldersPath){
 		
 		//get folders for each order
 		String[] orderIds = getSubdirectories(new File(orderFoldersPath));
@@ -123,6 +123,14 @@ public class StoreDataIO {
 				continue;
 			}
 			
+			//gets items from order-items.csv
+			
+			String orderItemsPath = orderFoldersPath + "/" + orderId +  "/order-items.csv";
+			orderItems = getItemsFromItemFile(store, orderItemsPath);
+			System.out.println("LOADED ITEMS: ");
+			for(Item i : orderItems)System.out.println(i.getName());
+			
+			
 			//File orderItemsFile = new File(folderPath + "/items.csv");
 			Order o = new Order(orderId, orderItems, orderTimestamp, orderShipped);
 			orders.add(o);			
@@ -132,14 +140,15 @@ public class StoreDataIO {
 		return orders;
 	}
 	
-	public static ArrayList<Item> getItemsFromItemFile(String itemsFilePath){
+	public static ArrayList<Item> getItemsFromItemFile(Store store, String itemsFilePath){
 		ArrayList<Item> items = new ArrayList<Item>();
-		String[] itemDataStrings = getCsvString(itemsFilePath).split("\n");
+		System.out.println(itemsFilePath);
+		String[] itemDataStrings = getLinesFromCsv(itemsFilePath);
 		
 		//STRING FORMAT: id, seller id, name, description, category, price, quantity
 		for(String itemDataString : itemDataStrings) {
 			String[] itemDataSplit = itemDataString.split("#");
-			//Item readItem = new Item(itemDataSplit[0], itemDataSplit[1], itemDataSplit[2], itemDataSplit[3], itemDataSplit[4], itemDataSplit[5], itemDataSplit[6]);
+			Item readItem = new Item(store, itemDataSplit[0], itemDataSplit[1], itemDataSplit[2], itemDataSplit[3], itemDataSplit[4], itemDataSplit[5], itemDataSplit[6]);
 		}
 		return items;
 	}
