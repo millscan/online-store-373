@@ -1,8 +1,11 @@
 package online_store_group_project;
 
+import java.util.UUID;
+
 public abstract class User {
 
 	protected Store store;
+	protected String id;
 	protected String username;
 	protected String emailAddress;
 	protected String firstName;
@@ -14,6 +17,7 @@ public abstract class User {
 		Boolean UserNameExists = store.userExists(username); 
 		
 		if(!EmailExists && !UserNameExists) {
+		this.id = UUID.randomUUID().toString();
 		this.store = store;
 		this.username = username;
 		this.emailAddress = emailAddress;
@@ -25,6 +29,21 @@ public abstract class User {
 		System.out.println("User not created");
 		}
 	}
+	
+	public User(String id, Store store, String username, String emailAddress, String firstName, String lastName, String password) {
+		this.id = id;
+		this.store = store;
+		this.username = username;
+		this.emailAddress = emailAddress;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
 	
 	public Store getStore() {
 		return store;

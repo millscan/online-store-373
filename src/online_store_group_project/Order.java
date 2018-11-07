@@ -18,10 +18,19 @@ public class Order {
 		this.shipped = false;
 	}
 	
+	//USED FOR LOADING DATA INTO ORDER FROM FILE
+	public Order(String id, ArrayList<Item> items, Date timestamp, boolean shipped) {
+		this.id = id;
+		this.items = items;
+		this.timestamp = timestamp;
+		this.shipped = shipped;
+	}
+	
 	public String getID() {
 		return this.id;
 	}
-	
+
+
 	public void addItem(Item item) {
 		items.add(item);
 	}

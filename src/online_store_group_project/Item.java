@@ -1,21 +1,24 @@
 package online_store_group_project;
 
+import java.util.UUID;
 
 public class Item implements Comparable<Item> {
 	
 	private Store store; 
-	private Owner seller;
+	private String id;
 	private String name;
 	private String description;
 	private Category category;
 	private double price;
 	private int quantity;
+	private Owner seller;
 	
 	
 	//Constructor
 	public Item(Store store, Owner seller, String name, String description, Category category, double price, int quantity) {
 		
 		if(!store.itemExists(name)) {
+		this.id = UUID.randomUUID().toString();
 		this.store = store; 
 		this.seller = seller;
 		this.name = name;
@@ -29,6 +32,31 @@ public class Item implements Comparable<Item> {
 		else {
 	    System.out.println("Item not created");	
 		}
+	}
+	
+	//Constructor for creating items with stored data
+	public Item(String id, Store store, Owner seller, String name, String description, Category category, double price, int quantity) {
+		
+		if(!store.itemExists(name)) {
+		this.id = id;
+		this.store = store; 
+		this.seller = seller;
+		this.name = name;
+		this.description = description;
+		this.category = category;
+		category.addItem(this); 
+		this.price = price;
+		this.quantity = quantity;
+		}
+		
+		else {
+	    System.out.println("Item not created");	
+		}
+	}
+	
+	
+	public String getID() {
+		return this.id;
 	}
 	
 	//Getters and Setters 
