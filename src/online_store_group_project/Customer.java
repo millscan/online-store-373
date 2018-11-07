@@ -60,4 +60,21 @@ public class Customer extends User {
 			System.out.println(cart.get(i).getName() + " :$" + cart.get(i).getPrice() + "\n");
 		}
 	}
+	
+	public String toCsvString() {
+		return String.format("Customer#%s#%s#%s#%s#%s", username, firstName, lastName, emailAddress, password);
+	}
+	
+	public String toDisplayString() {
+		String customerString = new String()
+		.concat("------Customer------\n")
+		.concat("username: " + username + "\n")
+		.concat("Email: " + emailAddress + "\n")
+		.concat("Orders: ");
+		for(Order o : orders) {
+			customerString = customerString.concat(o.getID() + "|");
+		}
+		return customerString;
+	}
+
 }

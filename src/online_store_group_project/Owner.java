@@ -57,5 +57,21 @@ public class Owner extends User {
 	public void setReceivedOrders(ArrayList<Order> receivedOrders) {
 		this.receivedOrders = receivedOrders;
 	}
+	
+	public String toCsvString() {
+		return String.format("Owner#%s#%s#%s#%s#%s", username, firstName, lastName, emailAddress, password);
+	}
+	
+	public String toDisplayString() {
+		String ownerString = new String()
+		.concat("------Owner------\n")
+		.concat("username: " + username + "\n")
+		.concat("Email: " + emailAddress + "\n")
+		.concat("Items: ");
+		for(Item i : items) {
+			ownerString = ownerString.concat(i.getName() + "|");
+		}
+		return ownerString;
+	}
 
 }

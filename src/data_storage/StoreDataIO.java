@@ -32,13 +32,13 @@ public class StoreDataIO {
 	
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 	
-	public static ArrayList<User> LoadOwners(Store store) {
+	public static void LoadOwners(Store store) {
 		File usersFile = new File("users.csv");
-		ArrayList<User> owners = new ArrayList<User>();
+		ArrayList<Owner> owners = new ArrayList<Owner>();
 		String[] csvLines = getLinesFromCsv("users.csv");
 		System.out.println("Loading owners...");
 		
-		if(usersFile.exists()) {
+		if(usersFile.exists() && csvLines != null) {
 			for(String csvLine : csvLines) {
 				//System.out.println(csvLine);
 				String parsedUserData[] = csvLine.split("#");
@@ -52,7 +52,7 @@ public class StoreDataIO {
 							parsedUserData[5]
 					);
 					
-					String itemFilePath = "userData/" + loadedOwner.getId() + "/items.csv";
+					String itemFilePath = "userData/" + loadedOwner.getUsername() + "/items.csv";
 					//TODO: get owner items from item file
 					loadedOwner.setItems(getItemsFromItemFile(store, itemFilePath));
 					owners.add(loadedOwner);
@@ -61,17 +61,16 @@ public class StoreDataIO {
 			}
 			
 		}
-		
-		return owners;
+		store.owners = owners;
 	}
 	
-	public static ArrayList<User> LoadCustomers(Store store){
+	public static void LoadCustomers(Store store){
 		File usersFile = new File("users.csv");
-		ArrayList<User> customers = new ArrayList<User>();
+		ArrayList<Customer> customers = new ArrayList<Customer>();
 		String[] csvLines = getLinesFromCsv("users.csv");
 		System.out.println("Loading customers...");
 		
-		if(usersFile.exists()) {
+		if(usersFile.exists() && csvLines!= null) {
 			for(String csvLine : csvLines) {
 				//System.out.println(csvLine);
 				String parsedUserData[] = csvLine.split("#");
@@ -93,18 +92,12 @@ public class StoreDataIO {
 
 			}	
 		}
-		
-		return customers;
+		store.customers = customers;
 	}
 	
-	public static ArrayList<User> LoadUsers(Store store) {
-		
-		ArrayList<User> users = new ArrayList<User>();
-		
-		users.addAll(LoadOwners(store));
-		users.addAll(LoadCustomers(store));
-		
-		return users;
+	public static void LoadUsers(Store store) {
+		LoadOwners(store);
+		LoadCustomers(store);
 	}
 	
 	public static ArrayList<Order> getOrdersFromPath(Store store, String orderFoldersPath){
@@ -173,40 +166,25 @@ public class StoreDataIO {
 		}
 		return items;
 	}
-		
-	public static FileErrorCodes storeUserData(User u) {		
-
-		String userCsvText = new String();
-		String userType = u.getClass().getSimpleName().trim();
 	
-		//make sure file is working		
-		
-		userCsvText = getCsvString("users.csv");	
-		
-		//TODO: Use payson's function to check if username/email exists
-		
-		//WRITE USER DATA TO USERS.CSV
-		//System.out.println(userCsvText);
-		String userCsvLine = String.format("%s#%s#%s#%s#%s#%s",userType, u.getUsername(), u.getFirstName(), u.getLastName(), u.getEmailAddress(), u.getPassword());
-		
-		if(userCsvText.contains(userCsvLine)) {
-			System.out.println("User already in users file");
+	public static void storeAllUsers(Store s) {
+		clearFile("users.csv");
+		for(Owner owner : s.owners) {
+			storeOwner(owner);
 		}
-		else {
-			writeLineToFile("users.csv", userCsvLine, true);
+		for(Customer customer: s.customers) {
+			storeCustomer(customer);
 		}
+	}
 		
-		//WRITE USER ITEMS/ORDERS to {username}/items or {username}/orders
-		if(userType.equals("Customer")) {
-			storeCustomerOrders((Customer)u);			
-		}
-		else {
-			//HANDLE ITEMS FOR OWNERS
-			storeOwnerItems((Owner)u);
-		}
-
-		return FileErrorCodes.Success;
-		
+	public static void storeOwner(Owner o) {
+		writeLineToFile("users.csv", o.toCsvString(), true);
+		storeOwnerItems(o);
+	}
+	
+	public static void storeCustomer(Customer c) {
+		writeLineToFile("users.csv", c.toCsvString(), true);
+		storeCustomerOrders(c);
 	}
 	
 	public static void storeCustomerOrders(Customer customer) {
@@ -216,6 +194,9 @@ public class StoreDataIO {
 		if(!orderFolder.exists()) {
 			orderFolder.mkdirs();
 		}
+		else {
+			clearOrdersDirectory(orderFolder);
+		}
 		
 		for(Order o : customer.getOrders()) {
 			String orderFolderPath = ordersPath + "/" + o.getID();
@@ -223,13 +204,12 @@ public class StoreDataIO {
 			if(!orderFolderFile.exists()) {
 				orderFolderFile.mkdirs();
 			}
-
+			
 			String orderInfoString = String.format("%s#%s",dateFormat.format(o.getTimestamp()), o.getShippedStatus());
 			String orderInfoFilePath = orderFolderPath + "/order-info.csv";
 			writeLineToFile(orderInfoFilePath, orderInfoString, false);
 			
 			String orderItemsFilePath = orderFolderPath + "/order-items.csv";
-			
 			
 			for(Item i: o.getItems()){
 				//STRING FORMAT: id, seller id, name, description, category, price, quantity
@@ -241,27 +221,41 @@ public class StoreDataIO {
 	}
 	
 	public static void storeOwnerItems(Owner owner) {
-		String itemsFilePath = "userData/" + owner.getUsername() + "/items.csv";
-		File itemsFile = new File(itemsFilePath);
-		createFile(itemsFile);
+		File ownerFolder = new File("userData/" + owner.getUsername());
+		ownerFolder.mkdirs();
 		
-		for(Item item : owner.getItems()) {
-			
+		String itemsFilePath = ownerFolder + "/items.csv";
+
+		clearFile(itemsFilePath);
+		
+		for(Item i : owner.getItems()) {
+			String itemString = String.format("%s#%s#%s#%s#%s#%s", 
+					i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory(), i.getPrice(), i.getQuantity());
+			writeLineToFile(itemsFilePath, itemString, true);
 		}
 	}
 	
-	public static void createFile(File f) {
-		if(!f.exists()) {
+	public static File getFile(String filePath) {
+		File file = new File(filePath);
+		if(!file.exists()) {
 			try {
-				f.createNewFile();
+				file.createNewFile();
 			}
 			catch(IOException e){
 				System.out.println("Error creating file.");
-				return;
 			}
 		}
+		return file;
 	}
 	
+	public static void clearOrdersDirectory(File directory) {
+		for(File orderDir : directory.listFiles()) {
+			for(File file : orderDir.listFiles()) {
+				file.delete();
+			}
+			orderDir.delete();
+		}
+	}
 	
 	public static String getCsvString(String filePath) {
 		String csvLine;
@@ -313,46 +307,21 @@ public class StoreDataIO {
 		return directories;
 	}
 	
-	public static FileErrorCodes WriteStringToFile(String filePath, String s) {
-		FileOutputStream fOut;
-		try {
-			File file = new File(filePath);
-			createFile(file);
-			fOut = new FileOutputStream(file);
-		}
-		catch(IOException e) {
-			System.out.println("Error getting file to write to");
-			return FileErrorCodes.FileError;
-		}
+	public static void clearFile(String filePath) {
+		getFile(filePath);
 		
-		try {
-			fOut.write(s.getBytes());
-		}
-		catch(IOException e) {
-			try {
-				fOut.close();
+		try(FileWriter fw = new FileWriter(filePath, false);
+			    BufferedWriter bw = new BufferedWriter(fw);
+			    PrintWriter out = new PrintWriter(bw))
+			{
+			} catch (IOException e) {
+				
+			    System.out.println("Error appending line to file. IOException");
 			}
-			catch(IOException ie){
-				return FileErrorCodes.FileError;
-			}
-			return FileErrorCodes.OutputError;
-		}
-		
-		try {
-			fOut.close();
-		}
-		catch(IOException ie){
-			return FileErrorCodes.FileError;
-		}
-		
-		return FileErrorCodes.Success;
 	}
 	
 	public static void writeLineToFile(String filePath, String line, boolean append) {
-	//create file if doesnt exist
-	File file = new File(filePath);
-	createFile(file);
-	
+
 	try(FileWriter fw = new FileWriter(filePath, append);
 		    BufferedWriter bw = new BufferedWriter(fw);
 		    PrintWriter out = new PrintWriter(bw))

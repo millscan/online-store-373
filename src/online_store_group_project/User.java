@@ -40,6 +40,10 @@ public abstract class User {
 		this.password = password;
 	}
 	
+	public abstract String toCsvString();
+	
+	public abstract String toDisplayString();
+	
 	public String getId() {
 		return this.id;
 	}
@@ -92,4 +96,5 @@ public abstract class User {
 	public String getPassword() {
 		return this.password;
 	}
+	
 }
