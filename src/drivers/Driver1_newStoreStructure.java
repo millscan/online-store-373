@@ -67,21 +67,6 @@ public class Driver1_newStoreStructure {
 		s1.customers.add(c4);
 		s1.customers.add(c5);
 		
-		//Add Owners to the Store 
-		s1.owners.add(o1); 
-		s1.owners.add(o2); 
-		s1.owners.add(o3); 
-		s1.owners.add(o4); 
-		s1.owners.add(o5); 
-		
-		//Add Customers to the Store 
-		s1.customers.add(c1);
-		s1.customers.add(c2);
-		s1.customers.add(c3);
-		s1.customers.add(c4);
-		s1.customers.add(c5);
-
-		
 		//Testing all functions in the Store Class 
 		System.out.println("Test for getting the Categories, Items in a Category, all Items, and featured Items:"); 
 		System.out.println(""); 
@@ -137,7 +122,6 @@ public class Driver1_newStoreStructure {
 	    }
 	    System.out.println(""); 
 
-		System.out.println(StoreDataIO.storeUserData(c1));
 		
 		
 		//Enter the Online Store with guided user inputs 

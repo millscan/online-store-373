@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import data_storage.*;
 
-public class DataStorageTestDriver {
+public class DataStorageInitializer {
 
 	public static void main(String[] args) {
 		//Create Store   
@@ -64,6 +64,19 @@ public class DataStorageTestDriver {
 		
 		c1.addOrder(ord1);
 		
+		
+		//Add All Users to the Store 
+		s1.owners.add(o1); 
+		s1.owners.add(o2);
+		s1.owners.add(o3);
+		s1.owners.add(o4);
+		s1.owners.add(o5);
+		s1.customers.add(c1); 
+		s1.customers.add(c2);
+		s1.customers.add(c3);
+		s1.customers.add(c4);
+		s1.customers.add(c5);
+		
 		//Saving users in users.csv
 		
 		ArrayList<User> usersToSave = new ArrayList<User>();
@@ -78,17 +91,29 @@ public class DataStorageTestDriver {
 		usersToSave.add(o4);
 		usersToSave.add(o5);
 		
-		for(User u : usersToSave) {
-			StoreDataIO.storeUserData(u);
+		System.out.println("Printing users before store:");
+		for(User u : s1.getUsers()) {
+			System.out.println(u.toDisplayString());
 		}
+		System.out.println();
 		
-		Store s2 = new Store();
+		StoreDataIO.storeAllUsers(s1);
 		
-		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s2);
-		System.out.println("Printing users:");
-		for(User u : loadedUsers) {
-			System.out.println(u.getUsername());
+		System.out.println("Printing users after store:");
+		for(User u : s1.getUsers()) {
+			System.out.println(u.toDisplayString());
 		}
+		System.out.println();
+
+		ArrayList<User> loadedUsers = StoreDataIO.LoadUsers(s1);
+		
+		System.out.println("Printing users after load:");
+		for(User u : s1.getUsers()) {
+			System.out.println(u.toDisplayString());
+		}
+		System.out.println();
+		
+
 	}
 
 }

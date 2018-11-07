@@ -149,7 +149,7 @@ public class Driver1 {
 	    }
 	    System.out.println(""); 
 
-		System.out.println(StoreDataIO.storeUserData(c1));
+		System.out.println(StoreDataIO.storeUser(c1));
 		
 		
 		HomePage StartingPage = new HomePage(); 
