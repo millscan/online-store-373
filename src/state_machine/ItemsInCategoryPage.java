@@ -42,7 +42,6 @@ package state_machine;
 	    	
 	    	if(ItemExists) {
 	    	item = pageState.getStore().getItemGivenName(input); 
-	    	System.out.println(item.getName());
 	    	pageState.setItem(item);
 	    	
 	    	pageState.setPreviousPage(this);

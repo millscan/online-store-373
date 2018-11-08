@@ -10,7 +10,7 @@ public class CategoryPage extends Page{
     private int Identifier = 2; 
 	
 	public void nextPage(PageState pageState) {	
-		while(true) {
+		
 		Scanner reader = new Scanner(System.in); 
         ArrayList<String> Categories = new ArrayList<String>(); 
         boolean CategoryExists = true;
@@ -22,6 +22,8 @@ public class CategoryPage extends Page{
     	
     	System.out.println("");
     	System.out.println("Choose a category:");   
+    	
+    	while(true) {
     	String input = reader.nextLine(); 
     	CategoryExists = pageState.getStore().SearchCategories(input); 
     	
@@ -45,7 +47,7 @@ public class CategoryPage extends Page{
     	return; 
     	}
     	else if(CategoryExists == false) {
-    	System.out.println("Category " + input + " does not exist. Plese Choose a different Category.");
+    	System.out.println("Category " + input + " does not exist. Plese Choose a different Category:");
     	System.out.println("");
     	} 
     	}

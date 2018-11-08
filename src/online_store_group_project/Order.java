@@ -14,7 +14,7 @@ public class Order {
 	public Order() {
 		id = UUID.randomUUID().toString();
 		this.items = new ArrayList<Item>();
-		this.timestamp = new Date();
+		this.timestamp = null;
 		this.shipped = false;
 	}
 	
@@ -55,4 +55,5 @@ public class Order {
 	public boolean getShippedStatus() {
 		return this.shipped;
 	}
+	
 }

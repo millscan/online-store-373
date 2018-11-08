@@ -11,6 +11,7 @@ public class Item {
 	private String category;
 	private double price;
 	private int quantity;
+	private int quantityPurchased; 
 	private Owner seller;
 	
 	
@@ -95,6 +96,7 @@ public class Item {
 		return this.price;
 	}
 	
+	
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
@@ -103,6 +105,20 @@ public class Item {
 		return this.quantity;
 	}
 	
+	public void setQuantityPurchased(int qp) {
+		quantityPurchased = qp; 
+	}
+	
+	public int getQuantityPurchased() {
+		return quantityPurchased; 
+	}
+	public void updateQuantityPurchased() {
+		quantity = quantity - quantityPurchased; 
+	}
+	
+	public void addQuantityPurchased(int qp) {
+		quantityPurchased = quantityPurchased + qp; 
+	}
 	//Over-riding compare method to sort Items alphabetically by name
 //	public int compareTo(Item i1) {
 //	

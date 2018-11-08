@@ -14,7 +14,7 @@ public class AddedCartPage extends Page {
     ArrayList<Item> cart = pageState.getCart(); 
 	Scanner reader = new Scanner(System.in);
 	
-	System.out.println("Item Was Successfully Added to your Cart");
+	System.out.println("Item(s) Were Successfully Added to your Cart");
 	System.out.println("");
 	
 	
@@ -35,15 +35,22 @@ public class AddedCartPage extends Page {
 		}
 		
 		else { 
-		 if(input.equals("view")) {
-	     		 
+		if(input.equals("view")) {
+	     
+		pageState.setPreviousPage(this);
+		pageState.setPage(new CartPage());	
+		return; 
 		 }
 		 
 		 else if(input.equals("checkout")) {
-			 
+		 
+		pageState.setPreviousPage(this);
+		pageState.setPage(new CheckoutPage());	
+		return; 
 		 }
 		 else {
 	     System.out.println("Invalid Entry. Please Try Again");	
+	     System.out.println("");	
 		 }	
 		} 
 	  }

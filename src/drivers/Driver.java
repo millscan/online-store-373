@@ -1,6 +1,9 @@
 package drivers;
 import data_storage.StoreDataIO;
 import online_store_group_project.*;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import state_machine.*;
@@ -137,14 +140,13 @@ public class Driver {
 	    }
 	    System.out.println(""); 
 
-		System.out.println(StoreDataIO.storeUserData(c1));
-		
-		
+		//System.out.println(StoreDataIO.storeUserData(c1));
+
 		
 		HomePage StartingPage = new HomePage(); 
 		PageState StateMachine = new PageState();
 		StateMachine.setStore(s1);
-		
+		StateMachine.setPreviousPage(StartingPage);
 		
 		StateMachine.setPage(StartingPage);
 		
@@ -153,8 +155,10 @@ public class Driver {
 		
 		boolean check = true;
 		while(true) {
+
 			check = false; 
-			Identifier = StateMachine.getNextPage().getIdentifier(); 
+			Identifier = StateMachine.getNextPage().getIdentifier();
+			
 			
 			if(Identifier == 1) {
 			HomePage homePage = new HomePage(); 
@@ -198,6 +202,26 @@ public class Driver {
 			cartPage.nextPage(StateMachine);
 			}
 			
+			else if(Identifier == 9) {
+			CheckoutPage checkoutPage = new CheckoutPage(); 
+			checkoutPage.nextPage(StateMachine);
+			}
+			
+			else if (Identifier == 10) {
+			ItemsInSearchPage searchPage = new ItemsInSearchPage(); 
+			searchPage.nextPage(StateMachine);	
+			}
+			
+			else if (Identifier == 11) {
+			PaymentVerification paymentVerification = new PaymentVerification(); 
+			paymentVerification.nextPage(StateMachine);	
+			}
+			
+			else if (Identifier == 12) {
+			OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage();
+			orderConfirmationPage.nextPage(StateMachine);	
+
+			}
 			
 		}
 		

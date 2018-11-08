@@ -6,9 +6,16 @@ public class PageState {
 	 private Page CurrentPage; 
 	 private ArrayList<Page> PreviousPage = new ArrayList<Page>(); 
 	 private String Category; 
+	 private String BitcoinAddress; 
+	 private String ShippingAddress; 
+	 private String cardNumber; 
+	 private int paymentOption;
+	 
 	 private Item item; 
+	 private ArrayList<Item> items = new ArrayList<Item>(); 
 	 private ArrayList<Item> cart = new ArrayList<Item>(); 
 	 private Store s1; 
+	 private double total; 
 	
 	 public void PageState(Page StartPage) {
 	 CurrentPage = StartPage; 
@@ -30,6 +37,21 @@ public class PageState {
     	 Page previousPage = PreviousPage.get(PreviousPage.size() - 1);
     	 PreviousPage.remove(PreviousPage.size() - 1);
     	 return previousPage; 
+     }
+     
+     public Page getTwoPagesBack() {
+    	 Page TwoPagesBack = PreviousPage.get(PreviousPage.size() - 2);
+    	 PreviousPage.remove(PreviousPage.size() - 1);
+    	 PreviousPage.remove(PreviousPage.size() - 1);
+    	 return TwoPagesBack; 
+     }
+     
+     public void addToCart(Item item) {
+    	 cart.add(item); 
+     }
+     
+     public ArrayList<Item> getCart(){
+    	 return cart; 
      }
      
      public void setStore(Store S1) {
@@ -56,8 +78,52 @@ public class PageState {
     	 return item; 
      }
      
-     public ArrayList<Item> getCart(){
-    	 return cart; 
+     public void setItems(ArrayList<Item> someitems) { 
+    	this.items = someitems; 
      }
      
+     public ArrayList<Item> getItems() {
+    	 return items; 
+     }
+     
+     public void addToCost(double acost) {
+    	 total = total + acost; 
+     }
+     
+     public double getCost() {
+    	 return total; 
+     }
+     
+     public void setBitcoinAddress(String address) {
+    	 BitcoinAddress = address; 
+     }
+     
+     public String getBitcoinAddress() {
+    	 return BitcoinAddress; 
+     }
+     
+     public void setShippingAddress(String address) {
+    	 ShippingAddress = address; 
+     }
+     
+     public String getShippingAddress() {
+    	 return ShippingAddress; 
+     }
+     
+     public void setCardNumber(String number) {
+    	 cardNumber = number; 
+     }
+     
+     public String getCardNumber() {
+    	 return cardNumber; 
+     }
+     
+     public void setPaymentState(int po) {
+    	 paymentOption = po; 
+     }
+     
+     public int getPaymentState() {
+    	 return paymentOption; 
+     }
+
 }

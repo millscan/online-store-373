@@ -18,7 +18,6 @@ public class HomePage extends Page {
 		System.out.println("Do you want to search(1), browse categories(2), or view featured items(3)?:");	
 		Scanner reader1 = new Scanner(System.in);
 		int inputInteger = reader1.nextInt(); 
-		pageState.setPreviousPage(this);
 		
 		if(inputInteger == 1) {
 		pageState.setPage(new SearchPage());

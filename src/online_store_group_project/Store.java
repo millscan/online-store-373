@@ -2,14 +2,19 @@ package online_store_group_project;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import online_store_group_project.*;
+import state_machine.*;
 
 public class Store {
  
 	public ArrayList<Customer> customers = new ArrayList<Customer>();
 	public ArrayList<Owner> owners = new ArrayList<Owner>(); 
 	public ArrayList<Item> items = new ArrayList<Item>();
+	public ArrayList<Order> orders = new ArrayList<Order>(); 
 	private ArrayList<Transaction> transactions;
 	private String url;
+	PaymentOptions p1;
 	
 	
 	//Setters and Getters 
@@ -125,6 +130,7 @@ public class Store {
 	
 	// SEARCHING/BROWSING ITEMS
 	
+	
 	//SEARCH ALL ITEMS
 	public ArrayList<Item> searchItems(String itemName){
 		ArrayList<Item> searchResults = new ArrayList<Item>();
@@ -167,6 +173,22 @@ public class Store {
 		 return searchResults; 
 	}
 	
+	//Complete Transactions 
+	public void completeTransactions(ArrayList<Item> cart, Order order, PageState ps) {
+		for(int i = 0; i < cart.size(); i++) {
+			User u1 = cart.get(i).getSeller();
+			User u2 = cart.get(i).getSeller();
+			
+			//modify from user and payment option 
+	    	Transaction newtransaction = new Transaction(this, ps.getCost(), order.getTimestamp(), u1, u2, p1);
+	    	
+	    	this.transactions.add(newtransaction); 
+	    }
+		
+		System.out.println("Transactions Completed Successfully.");
+		
+	}
+	
 	//Item Exists within ArrayList 
 	public boolean ItemExists(ArrayList<Item> Items, String itemName) {
 		for(int i = 0; i < Items.size(); i++) {
@@ -197,6 +219,8 @@ public class Store {
 	    }
 	}
 	
+	//Print Item Details 
+	
 	public void PrintItemDetails(Item i1) {
 		System.out.println("");
 		System.out.println(i1.getName() + ":"); 
@@ -209,15 +233,19 @@ public class Store {
 		System.out.println("");
 	}
 	
-	/*
+	//Print Cart Details
+	
 	public double PrintCart(ArrayList<Item> items) {
-		 for(int i = 0; i < items.size(); i++) {
-	     System.out.println("Cart:");
-	     System.out.println("");
-	    
-	     return 20.0
+		double totalcost = 0.0;  
+		
+		for(int i = 0; i < items.size(); i++) {
+	     System.out.println("Items and Prices:");
+	     System.out.println(items.get(i).getName() + "  qty: " + items.get(i).getQuantityPurchased() + "   price:  $" + items.get(i).getPrice()); 
+	     totalcost = totalcost + items.get(i).getPrice()*items.get(i).getQuantityPurchased(); 
 		 }
-	} */
+
+		 return totalcost; 
+	} 
 	
 	//Other Getters 
 	

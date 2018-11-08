@@ -5,13 +5,13 @@ import java.util.Date;
 public class Transaction {
 
 	private Store store;
-	private int amount;
+	private double amount;
 	private Date date;
 	private User toUser;
 	private User fromUser;
 	private PaymentOptions paymentOption;
 	
-	public Transaction(Store store, int amount, Date date, User fromUser, User toUser,PaymentOptions paymentOption) {
+	public Transaction(Store store, double amount, Date date, User fromUser, User toUser,PaymentOptions paymentOption) {
 		this.store = store;
 		this.amount = amount;
 		this.date = date;
@@ -24,7 +24,7 @@ public class Transaction {
 		this.amount = amount;
 	}
 	
-	public int getAmount() {
+	public double getAmount() {
 		return this.amount;
 	}
 	
