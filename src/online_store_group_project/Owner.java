@@ -14,6 +14,13 @@ public class Owner extends User {
 		this.ratings = new ArrayList<Rating>();
 		this.receivedOrders = new ArrayList<Order>();
 	}
+	
+	public Owner(Store store, String id, String username, String emailAddress, String firstName, String lastName, String password) {
+		super(store, id, username, emailAddress, firstName, lastName, password);
+		this.items = new ArrayList<Item>();
+		this.ratings = new ArrayList<Rating>();
+		this.receivedOrders = new ArrayList<Order>();
+	}
 
 	public ArrayList<Item> getItems() {
 		return items;
@@ -59,7 +66,7 @@ public class Owner extends User {
 	}
 	
 	public String toCsvString() {
-		return String.format("Owner#%s#%s#%s#%s#%s", username, firstName, lastName, emailAddress, password);
+		return String.format("Owner#%s#%s#%s#%s#%s#%s", id, username, firstName, lastName, emailAddress, password);
 	}
 	
 	public String toDisplayString() {

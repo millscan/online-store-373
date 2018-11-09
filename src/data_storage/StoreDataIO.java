@@ -30,26 +30,36 @@ public class StoreDataIO {
 		EmailInUseError
 	}
 	
+	
+	public static void LoadStoreData(Store store) {
+		LoadOwners(store);
+		LoadCustomers(store);
+		LoadItems(store);
+		LoadOrders(store);
+		LoadTransactions(store);
+	}
+	
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 	
 	public static void LoadOwners(Store store) {
 		File usersFile = new File("users.csv");
 		ArrayList<Owner> owners = new ArrayList<Owner>();
 		String[] csvLines = getLinesFromCsv("users.csv");
-		System.out.println("Loading owners...");
+		System.out.println("Loading owners...\n");
 		
 		if(usersFile.exists() && csvLines != null) {
 			for(String csvLine : csvLines) {
 				//System.out.println(csvLine);
 				String parsedUserData[] = csvLine.split("#");
-				if(parsedUserData[0].equals("Owner")) {
+				if(parsedUserData[0].equals("Owner")) {					
 					Owner loadedOwner = new Owner(
 							store,
 							parsedUserData[1], 
 							parsedUserData[2], 
 							parsedUserData[3],
 							parsedUserData[4],
-							parsedUserData[5]
+							parsedUserData[5],
+							parsedUserData[6]
 					);
 					
 					String itemFilePath = "userData/" + loadedOwner.getUsername() + "/items.csv";
@@ -68,7 +78,7 @@ public class StoreDataIO {
 		File usersFile = new File("users.csv");
 		ArrayList<Customer> customers = new ArrayList<Customer>();
 		String[] csvLines = getLinesFromCsv("users.csv");
-		System.out.println("Loading customers...");
+		System.out.println("Loading customers...\n");
 		
 		if(usersFile.exists() && csvLines!= null) {
 			for(String csvLine : csvLines) {
@@ -81,12 +91,9 @@ public class StoreDataIO {
 							parsedUserData[2], 
 							parsedUserData[3],
 							parsedUserData[4],
-							parsedUserData[5]
-					);
-
-					String orderFoldersPath = "userData/" + customer.getUsername() + "/orders";
-					ArrayList<Order> customerOrders = getOrdersFromPath(store, orderFoldersPath);
-					customer.setOrders(customerOrders);					
+							parsedUserData[5],
+							parsedUserData[6]
+					);		
 					customers.add(customer);
 				}
 
@@ -94,10 +101,103 @@ public class StoreDataIO {
 		}
 		store.customers = customers;
 	}
+
 	
-	public static void LoadUsers(Store store) {
-		LoadOwners(store);
-		LoadCustomers(store);
+	public static void LoadTransactions(Store store) {
+		File transactionsFile = new File("transactions.csv");
+		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+		String[] csvLines = getLinesFromCsv("transactions.csv");
+		System.out.println("Loading Transactions...\n");
+		
+		//IN DATABASE: DATE, AMOUNT, FROMUSERID, TOUSERID, PAYMENTOPTION
+		if(transactionsFile.exists() && csvLines!= null) {
+			for(String csvLine : csvLines) {
+				try {
+					String parsedData[] = csvLine.split("#");
+					Date date = dateFormat.parse(parsedData[0]);
+					double amount = Double.parseDouble(parsedData[1]);
+					User fromUser = store.getUserById(parsedData[2]);
+					User toUser = store.getUserById(parsedData[3]);
+					PaymentOptions paymentOption = PaymentOptions.valueOf(parsedData[4]);
+					Transaction transaction = new Transaction(
+							store,
+							amount,
+							date,
+							fromUser,
+							toUser,
+							paymentOption
+					);
+					transactions.add(transaction);
+				}
+				catch(IndexOutOfBoundsException e){
+					System.out.println("Error parsing transaction data: index out of bounds");
+				}
+				catch(ParseException e) {
+					System.out.println("Error parsing transaction data: parse exception");
+				}
+
+			}
+		}
+		store.transactions = transactions;		
+	}
+	
+	public static void storeStoreData(Store store) {
+		storeUsers(store);
+		storeItems(store);
+		storeOrders(store);
+		storeTransactions(store);
+	}
+	
+	public static void storeTransactions(Store store) {
+		clearFile("transactions.csv");
+		for(Transaction t : store.transactions) {
+			writeLineToFile("transactions.csv", t.toCsvString(), true);
+		}
+	}
+	
+	public static void storeItems(Store store) {
+		clearFile("items.csv");
+		for(Item i : store.items) {
+			writeLineToFile("items.csv", i.toCsvString(), true);
+		}
+	}
+	
+	public static void LoadItems(Store store) {
+		store.items = getItemsFromItemFile(store, "items.csv");
+	}
+	
+	public static void LoadOrders(Store store) {
+		store.orders = getOrdersFromPath(store, "orders");
+	}
+	
+	public static void storeOrders(Store store) {
+		
+		File orderFolder = new File("orders");
+		if(!orderFolder.exists()) {
+			orderFolder.mkdirs();
+		}
+		else {
+			clearOrdersDirectory(orderFolder);
+		}
+		
+		for(Order o : store.orders) {
+			String orderFolderPath = "orders/" + o.getID();
+			File orderFolderFile = new File(orderFolderPath);
+			if(!orderFolderFile.exists()) {
+				orderFolderFile.mkdirs();
+			}
+			
+			String orderInfoString = String.format("%s#%s#%s#%s#%s",o.getID(), dateFormat.format(o.getTimestamp()), o.getSeller().getId(), o.getBuyer().getId(), o.getShippedStatus());
+			String orderInfoFilePath = orderFolderPath + "/order-info.csv";
+			writeLineToFile(orderInfoFilePath, orderInfoString, false);
+			
+			String orderItemsFilePath = orderFolderPath + "/order-items.csv";
+			
+			for(Item i: o.getItems()){
+				//STRING FORMAT: id, seller id, name, description, category, price, quantity
+				writeLineToFile(orderItemsFilePath, i.toCsvString(), true);
+			}
+		}
 	}
 	
 	public static ArrayList<Order> getOrdersFromPath(Store store, String orderFoldersPath){
@@ -114,13 +214,18 @@ public class StoreDataIO {
 			ArrayList<Item> orderItems = new ArrayList<Item>();
 			Date orderTimestamp;
 			boolean orderShipped;
+			Customer orderBuyer;
+			Owner orderSeller;
 
 			String orderInfoString = getCsvString(orderFoldersPath + "/" + orderId +  "/order-info.csv");
 			
 			try {
 				String[] orderInfoSplit = orderInfoString.split("#");
-				orderTimestamp = dateFormat.parse(orderInfoSplit[0]);
-				orderShipped = (orderInfoSplit[1] == "true") ? true : false;
+				orderTimestamp = dateFormat.parse(orderInfoSplit[1]);
+				orderSeller = store.getOwnerById(orderInfoSplit[2]);
+				orderBuyer = store.getCustomerById(orderInfoSplit[3]);
+				orderShipped = (orderInfoSplit[4] == "true") ? true : false;
+				
 			}
 			catch(IndexOutOfBoundsException e) {
 				System.out.println("couldnt read order data. order not added");
@@ -135,10 +240,9 @@ public class StoreDataIO {
 			
 			String orderItemsPath = orderFoldersPath + "/" + orderId +  "/order-items.csv";
 			orderItems = getItemsFromItemFile(store, orderItemsPath);
-			
-			
-			//File orderItemsFile = new File(folderPath + "/items.csv");
-			Order o = new Order(orderId, orderItems, orderTimestamp, orderShipped);
+
+			Order o = new Order(store, orderId, orderSeller, orderBuyer, orderItems, orderTimestamp, orderShipped);
+			orderBuyer.addOrder(o);
 			orders.add(o);			
 			//System.out.println(folderPath);
 		}
@@ -153,11 +257,20 @@ public class StoreDataIO {
 		if(itemsFile.exists()) {
 			String[] itemDataStrings = getLinesFromCsv(itemsFilePath);
 			
-			//STRING FORMAT: id, seller id, name, description, category, price, quantity
+			//STRING FORMAT: Store store, String id, Owner seller, String name, String description, String category, double price, int quantity
 			for(String itemDataString : itemDataStrings) {
-				String[] itemDataSplit = itemDataString.split("#");
 				try {
-					items.add(new Item(store, itemDataSplit[0], itemDataSplit[1], itemDataSplit[2], itemDataSplit[3], itemDataSplit[4], itemDataSplit[5]));
+					String[] itemDataSplit = itemDataString.split("#");
+					String itemId = itemDataSplit[0];
+					Owner itemSeller = store.getOwnerById(itemDataSplit[1]);
+					String itemName = itemDataSplit[2];
+					String itemDescription = itemDataSplit[3];
+					String itemCategory = itemDataSplit[4];
+					double itemPrice = Double.parseDouble(itemDataSplit[5]);
+					int itemQuantity = Integer.parseInt(itemDataSplit[6]);
+					Item addedItem = new Item(store, itemId, itemSeller, itemName, itemDescription, itemCategory, itemPrice, itemQuantity);
+					items.add(addedItem);
+					itemSeller.addItem(addedItem);
 				}
 				catch(IndexOutOfBoundsException e) {
 					System.out.println("Can't create item from this string: " + itemDataString);
@@ -167,7 +280,7 @@ public class StoreDataIO {
 		return items;
 	}
 	
-	public static void storeAllUsers(Store s) {
+	public static void storeUsers(Store s) {
 		clearFile("users.csv");
 		for(Owner owner : s.owners) {
 			storeOwner(owner);
@@ -179,12 +292,12 @@ public class StoreDataIO {
 		
 	public static void storeOwner(Owner o) {
 		writeLineToFile("users.csv", o.toCsvString(), true);
-		storeOwnerItems(o);
+		//storeOwnerItems(o);
 	}
 	
 	public static void storeCustomer(Customer c) {
 		writeLineToFile("users.csv", c.toCsvString(), true);
-		storeCustomerOrders(c);
+		//storeCustomerOrders(c);
 	}
 	
 	public static void storeCustomerOrders(Customer customer) {
@@ -286,15 +399,17 @@ public class StoreDataIO {
 	}
 	
 	public static String[] getLinesFromCsv(String filePath) {
-		String csvLine;
-		
-		//get last version of csv
-		csvLine = getCsvString(filePath);
-		if(csvLine.trim().equals("")){
-			return null;
-		}
-		return csvLine.split("\n");
-		//System.out.println(csvLine);
+	
+	//get last version of csv
+	String csvLine = getCsvString(filePath);
+	if(csvLine == null) {
+		return null;
+	}
+	if(csvLine.trim().equals("")){
+		return null;
+	}
+	return csvLine.split("\n");
+	//System.out.println(csvLine);
 	}
 	
 	public static String[] getSubdirectories(File folder) {

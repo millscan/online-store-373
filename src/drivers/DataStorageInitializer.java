@@ -3,6 +3,7 @@ package drivers;
 import online_store_group_project.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import data_storage.*;
 
@@ -55,7 +56,7 @@ public class DataStorageInitializer {
 		o5.addItem(i7); 
 		
 		//Add orders to customers
-		Order ord1 = new Order();
+		Order ord1 = new Order(s1, o1, c1, false);
 		ord1.addItem(i1);
 		ord1.addItem(i2);
 		ord1.addItem(i3);
@@ -98,7 +99,7 @@ public class DataStorageInitializer {
 		System.out.println();
 		System.out.println("\n\n\n\n\n");
 		
-		StoreDataIO.storeAllUsers(s1);
+		StoreDataIO.storeStoreData(s1);
 		
 		System.out.println("Printing users after store:");
 		for(User u : s1.getUsers()) {
@@ -107,7 +108,7 @@ public class DataStorageInitializer {
 		System.out.println("\n\n\n\n\n");
 		
 		Store s2 = new Store();
-		StoreDataIO.LoadUsers(s2);
+		StoreDataIO.LoadStoreData(s2);
 		
 		System.out.println("Printing users after loading into another store:");
 		for(User u : s2.getUsers()) {

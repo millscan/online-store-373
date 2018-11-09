@@ -30,7 +30,7 @@ public abstract class User {
 		}
 	}
 	
-	public User(String id, Store store, String username, String emailAddress, String firstName, String lastName, String password) {
+	public User(Store store, String id, String username, String emailAddress, String firstName, String lastName, String password) {
 		this.id = id;
 		this.store = store;
 		this.username = username;
