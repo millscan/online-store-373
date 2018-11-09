@@ -12,7 +12,8 @@ public class Store {
 	public ArrayList<Owner> owners = new ArrayList<Owner>(); 
 	public ArrayList<Item> items = new ArrayList<Item>();
 	public ArrayList<Order> orders = new ArrayList<Order>(); 
-	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+	public ArrayList<User> users = new ArrayList<User>();
+	private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	private String url;
 	PaymentOptions p1;
 	
@@ -26,10 +27,9 @@ public class Store {
 		return owners;
 	}
 	
-	public ArrayList<User> getUsers(){
-		ArrayList<User> users = new ArrayList<User>();
-		users.addAll(customers);
-		users.addAll(owners);
+	public ArrayList<User> getUsers(ArrayList<Customer> Customers, ArrayList<Owner> Owners){
+		users.addAll(Customers);
+		users.addAll(Owners);
 		return users;
 	}
 	
@@ -102,13 +102,27 @@ public class Store {
 	//Make sure username and emailaddress are valid 
 	public boolean userExists(String emailAddress) {
 		int i = 0;
-		while(i < this.getUsers().size()) {
-			if (this.getUsers().get(i).getEmailAddress() == emailAddress) {
+		while(i < this.users.size()) {
+			if (this.users.get(i).getEmailAddress().equals(emailAddress)) {
 				System.out.println("Email Address is already in use. Please use a different email address.");
 				return true;
 			}
-			else if(this.getUsers().get(i).getUsername() == emailAddress) {
+			else if(this.users.get(i).getUsername().equals(emailAddress)) {
 				System.out.println("Username is already in use. Please use a different username.");
+				return true;
+			}
+			i++;
+		}
+		return false;
+	}
+	
+	public boolean userExistsCheck(String emailAddress) {
+		int i = 0;
+		while(i < this.users.size()) {
+			if (this.users.get(i).getEmailAddress().equals(emailAddress)) {
+				return true;
+			}
+			else if(this.users.get(i).getUsername().equals(emailAddress)) {
 				return true;
 			}
 			i++;
@@ -240,7 +254,7 @@ public class Store {
 		
 		for(int i = 0; i < items.size(); i++) {
 	     System.out.println("Items and Prices:");
-	     System.out.println(items.get(i).getName() + "  qty: " + items.get(i).getQuantityPurchased() + "   price:  $" + items.get(i).getPrice()); 
+	     System.out.println(items.get(i).getName() + "  qty: " + items.get(i).getQuantityPurchased() + "  seller:  " +  items.get(i).getSeller().getFirstName() + items.get(i).getSeller().getLastName() + "  price:  $" + items.get(i).getPrice()); 
 	     totalcost = totalcost + items.get(i).getPrice()*items.get(i).getQuantityPurchased(); 
 		 }
 
@@ -272,5 +286,28 @@ public class Store {
 		return user;
 	}
 	
+	public void removeItems(ArrayList<Item> cart) {
+		
+		for(int i = 0; i < cart.size(); i++) {
+         decreaseQuantity(cart.get(i)); 
+		}
+	}
 	
+	public void decreaseQuantity(Item i1) {
+		int newq = 0; 
+		
+		
+		for(int i = 0; i < items.size(); i++) {
+			if(items.get(i).getName().equals(i1.getName())) {
+		     newq = (items.get(i).getQuantity() - items.get(i).getQuantityPurchased()); 
+		     if (newq == 0) {
+		    	 items.remove(items.get(i)); 
+		     }
+		     
+		     else {
+		    	 items.get(i).setQuantity(newq);
+		    	 }
+			}
+		}
+	}
 }

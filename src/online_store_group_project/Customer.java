@@ -8,16 +8,16 @@ public class Customer extends User {
 	private ArrayList<Order> orders;
 	private ArrayList<Item> cart;
 	
+	//I added this default constructor
+	public Customer() {
+		isCustomer = true;
+	}
+	
 	public Customer(Store store, String username, String emailAddress, String firstName, String lastName, String password) {
 		super(store, username, emailAddress, firstName, lastName, password);
 		this.orders = new ArrayList<Order>();
 		this.cart = new ArrayList<Item>();
-	}
-	
-	public Customer(Store store, String id, String username, String emailAddress, String firstName, String lastName, String password) {
-		super(store, id, username, emailAddress, firstName, lastName, password);
-		this.orders = new ArrayList<Order>();
-		this.cart = new ArrayList<Item>();
+		isCustomer = true;
 	}
 	
 	public void setShippingAddress(String shippingAddress) {
@@ -68,7 +68,7 @@ public class Customer extends User {
 	}
 	
 	public String toCsvString() {
-		return String.format("Customer#%s#%s#%s#%s#%s#%s", id, username, firstName, lastName, emailAddress, password);
+		return String.format("Customer#%s#%s#%s#%s#%s", username, firstName, lastName, emailAddress, password);
 	}
 	
 	public String toDisplayString() {

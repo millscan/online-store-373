@@ -141,9 +141,9 @@ public class Driver {
 	    System.out.println(""); 
 
 		//System.out.println(StoreDataIO.storeUserData(c1));
-
+        s1.getUsers(s1.customers, s1.owners); 
 		
-		HomePage StartingPage = new HomePage(); 
+		SignInPage StartingPage = new SignInPage(); 
 		PageState StateMachine = new PageState();
 		StateMachine.setStore(s1);
 		StateMachine.setPreviousPage(StartingPage);
@@ -222,6 +222,52 @@ public class Driver {
 			orderConfirmationPage.nextPage(StateMachine);	
 
 			}
+			
+			else if (Identifier == 13) {
+			CreateAccountPage createAccountPage = new CreateAccountPage();
+			createAccountPage.nextPage(StateMachine);		
+			}
+			
+			else if (Identifier == 14) {
+			SignInPage signInPage = new SignInPage();
+			signInPage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 15) {
+			EnterPasswordPage enterPasswordPage  = new EnterPasswordPage();
+			enterPasswordPage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 16) {
+			OwnerHomePage ownerHomePage  = new OwnerHomePage();
+			ownerHomePage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 17) {
+			OwnerItemsPage ownerItemsPage  = new OwnerItemsPage();
+			ownerItemsPage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 18) {
+			OwnerItemPage ownerItemPage  = new OwnerItemPage();
+			ownerItemPage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 19) {
+			OrderInfoPage orderInfoPage = new OrderInfoPage();
+			orderInfoPage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 20) {
+			AddItemPage addItemPage = new AddItemPage();
+			addItemPage.nextPage(StateMachine);			
+			}
+			
+			else if (Identifier == 21) {
+			ViewOrdersPage viewOrdersPage = new ViewOrdersPage();
+			viewOrdersPage.nextPage(StateMachine);			
+			}
+			
 			
 		}
 		

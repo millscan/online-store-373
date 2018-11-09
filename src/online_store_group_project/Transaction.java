@@ -2,8 +2,6 @@ package online_store_group_project;
 
 import java.util.Date;
 
-import data_storage.StoreDataIO;
-
 public class Transaction {
 
 	private Store store;
@@ -60,9 +58,5 @@ public class Transaction {
 	
 	public PaymentOptions getPaymentOption() {
 		return this.paymentOption;
-	}
-	
-	public String toCsvString() {
-		return String.format("%s#%s#%s#%s#%s", StoreDataIO.dateFormat.format(date), amount, fromUser.getId(), toUser.getId(), paymentOption);
 	}
 }

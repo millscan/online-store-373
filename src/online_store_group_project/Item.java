@@ -2,8 +2,6 @@ package online_store_group_project;
 
 import java.util.UUID;
 
-import data_storage.StoreDataIO;
-
 public class Item {
 	
 	private Store store; 
@@ -36,23 +34,25 @@ public class Item {
 		}
 	}
 	
-	//Constructor for creating items with stored data
-	public Item(Store store, String id, Owner seller, String name, String description, String category, double price, int quantity) {
-		
-		if(!store.itemNameTaken(name)) {
-		this.id = id;
-		this.store = store; 
+	public Item(Store store, Owner seller) {
+		this.id = UUID.randomUUID().toString();
+		this.store = store;
 		this.seller = seller;
+	}
+
+	//Constructor for creating items with stored data
+	public Item( Store store, String sellerId, String name, String description, String category, String price, String quantity) {
+		
+		//TODO: we should probably check if item name is taken before calling constructor
+		this.id = UUID.randomUUID().toString();
+		this.store = store; 
+		this.seller = store.getOwnerById(sellerId);
 		this.name = name;
 		this.description = description;
 		this.category = category;
-		this.price = price;
-		this.quantity = quantity;
-		}
-		
-		else {
-	    System.out.println("Item not created");	
-		}
+		this.price = Double.parseDouble(price);
+		this.quantity = Integer.parseInt(quantity);
+
 	}
 	
 	
@@ -133,10 +133,6 @@ public class Item {
 	
 	public static void printItemInfo(Item i) {
 		System.out.println(String.format("Name: %s %n Description: %s %n Price %s %n Quantity %s %n", i.getName(), i.getDescription(), i.getPrice(), i.getQuantity()));
-	}
-	
-	public String toCsvString() {
-		return String.format("%s#%s#%s#%s#%s#%s#%s", id, seller.getId(), name, description, category, price, quantity);
 	}
 	
 }

@@ -11,6 +11,11 @@ public abstract class User {
 	protected String firstName;
 	protected String lastName;
 	protected String password;
+	protected boolean isCustomer;
+	
+	public User() {
+		
+	}
 	
 	public User(Store store, String username, String emailAddress, String firstName, String lastName, String password) {
 		Boolean EmailExists = store.userExists(emailAddress);
@@ -30,7 +35,7 @@ public abstract class User {
 		}
 	}
 	
-	public User(Store store, String id, String username, String emailAddress, String firstName, String lastName, String password) {
+	public User(String id, Store store, String username, String emailAddress, String firstName, String lastName, String password) {
 		this.id = id;
 		this.store = store;
 		this.username = username;
@@ -97,4 +102,8 @@ public abstract class User {
 		return this.password;
 	}
 	
+	public boolean getIsCustomer() {
+		return isCustomer;
+	}
+
 }

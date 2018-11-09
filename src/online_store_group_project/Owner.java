@@ -2,24 +2,24 @@ package online_store_group_project;
 
 import java.util.ArrayList;
 
+
 public class Owner extends User {
 	
 	private ArrayList<Item> items;
 	private ArrayList<Rating> ratings;
 	private ArrayList<Order> receivedOrders;
+	protected boolean isCustomer; 
+	
+	public Owner() {
+		isCustomer = false;
+	}
 	
 	public Owner(Store store, String username, String emailAddress, String firstName, String lastName, String password) {
 		super(store, username, emailAddress, firstName, lastName, password);
 		this.items = new ArrayList<Item>();
 		this.ratings = new ArrayList<Rating>();
 		this.receivedOrders = new ArrayList<Order>();
-	}
-	
-	public Owner(Store store, String id, String username, String emailAddress, String firstName, String lastName, String password) {
-		super(store, id, username, emailAddress, firstName, lastName, password);
-		this.items = new ArrayList<Item>();
-		this.ratings = new ArrayList<Rating>();
-		this.receivedOrders = new ArrayList<Order>();
+		isCustomer = false;
 	}
 
 	public ArrayList<Item> getItems() {
@@ -66,7 +66,7 @@ public class Owner extends User {
 	}
 	
 	public String toCsvString() {
-		return String.format("Owner#%s#%s#%s#%s#%s#%s", id, username, firstName, lastName, emailAddress, password);
+		return String.format("Owner#%s#%s#%s#%s#%s", username, firstName, lastName, emailAddress, password);
 	}
 	
 	public String toDisplayString() {
@@ -80,5 +80,6 @@ public class Owner extends User {
 		}
 		return ownerString;
 	}
-
+    
+	
 }

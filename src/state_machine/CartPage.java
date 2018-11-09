@@ -18,8 +18,8 @@ public class CartPage extends Page {
     
 	while(true) {
 	System.out.println("These are all the items in your cart with prices:");
-	pageState.getStore().PrintCart(cart);
 	System.out.println("cart:");
+	pageState.getStore().PrintCart(cart);
 	System.out.println("Total cost: $" + pageState.getCost());
 	
 	System.out.println("Do you want to checkout ('checkout')  continue shopping ('continue')");

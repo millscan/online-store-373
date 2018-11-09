@@ -16,6 +16,9 @@ public class PageState {
 	 private ArrayList<Item> cart = new ArrayList<Item>(); 
 	 private Store s1; 
 	 private double total; 
+	 private User u1;
+	 private Order o1;
+
 	
 	 public void PageState(Page StartPage) {
 	 CurrentPage = StartPage; 
@@ -124,6 +127,21 @@ public class PageState {
      
      public int getPaymentState() {
     	 return paymentOption; 
+     }
+     
+     public void setUser(User user) {
+    	 u1 = user;
+     }
+     public User getUser() {
+    	 return u1;
+     }
+     
+     //I now added setter and getter for order field
+     public void setOrder(Order order) {
+    	 o1 = order;
+     }
+     public Order getOrder() {
+    	 return o1;
      }
 
 }
