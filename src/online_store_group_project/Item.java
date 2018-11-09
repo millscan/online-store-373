@@ -41,17 +41,17 @@ public class Item {
 	}
 
 	//Constructor for creating items with stored data
-	public Item( Store store, String sellerId, String name, String description, String category, String price, String quantity) {
+	public Item( Store store, String id, Owner seller, String name, String description, String category, double price, int quantity) {
 		
 		//TODO: we should probably check if item name is taken before calling constructor
-		this.id = UUID.randomUUID().toString();
+		this.id = id;
 		this.store = store; 
-		this.seller = store.getOwnerById(sellerId);
+		this.seller = seller;
 		this.name = name;
 		this.description = description;
 		this.category = category;
-		this.price = Double.parseDouble(price);
-		this.quantity = Integer.parseInt(quantity);
+		this.price = price;
+		this.quantity = quantity;
 
 	}
 	
@@ -125,6 +125,11 @@ public class Item {
 	public void addQuantityPurchased(int qp) {
 		quantityPurchased = quantityPurchased + qp; 
 	}
+	
+	public String toCsvString() {
+		return String.format("%s#%s#%s#%s#%s#%s#%s", id, seller.getId(), name, description, category, price, quantity);
+	}
+	
 	//Over-riding compare method to sort Items alphabetically by name
 //	public int compareTo(Item i1) {
 //	

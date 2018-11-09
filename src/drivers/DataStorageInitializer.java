@@ -56,7 +56,7 @@ public class DataStorageInitializer {
 		o5.addItem(i7); 
 		
 		//Add orders to customers
-		Order ord1 = new Order(s1, o1, c1, false);
+		Order ord1 = new Order(s1, o1, c1);
 		ord1.addItem(i1);
 		ord1.addItem(i2);
 		ord1.addItem(i3);
@@ -93,16 +93,23 @@ public class DataStorageInitializer {
 		usersToSave.add(o5);
 		
 		System.out.println("Printing users before store:");
-		for(User u : s1.getUsers()) {
+		for(User u : s1.customers) {
 			System.out.println(u.toDisplayString());
 		}
+		for(User u : s1.owners) {
+			System.out.println(u.toDisplayString());
+		}
+		
 		System.out.println();
 		System.out.println("\n\n\n\n\n");
 		
 		StoreDataIO.storeStoreData(s1);
 		
 		System.out.println("Printing users after store:");
-		for(User u : s1.getUsers()) {
+		for(User u : s1.customers) {
+			System.out.println(u.toDisplayString());
+		}
+		for(User u : s1.owners) {
 			System.out.println(u.toDisplayString());
 		}
 		System.out.println("\n\n\n\n\n");
@@ -111,7 +118,10 @@ public class DataStorageInitializer {
 		StoreDataIO.LoadStoreData(s2);
 		
 		System.out.println("Printing users after loading into another store:");
-		for(User u : s2.getUsers()) {
+		for(User u : s2.customers) {
+			System.out.println(u.toDisplayString());
+		}
+		for(User u : s2.owners) {
 			System.out.println(u.toDisplayString());
 		}
 		System.out.println();

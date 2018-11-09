@@ -1,10 +1,14 @@
 package online_store_group_project;
 
 import java.util.Date;
+import java.util.UUID;
+
+import data_storage.StoreDataIO;
 
 public class Transaction {
 
 	private Store store;
+	private String id;
 	private double amount;
 	private Date date;
 	private User toUser;
@@ -13,6 +17,7 @@ public class Transaction {
 	
 	public Transaction(Store store, double amount, Date date, User fromUser, User toUser,PaymentOptions paymentOption) {
 		this.store = store;
+		this.id = UUID.randomUUID().toString();
 		this.amount = amount;
 		this.date = date;
 		this.fromUser = fromUser;
@@ -58,5 +63,9 @@ public class Transaction {
 	
 	public PaymentOptions getPaymentOption() {
 		return this.paymentOption;
+	}
+	
+	public String toCsvString() {
+		return String.format("%s#%s#%s#%s#%s", id, StoreDataIO.dateFormat.format(date), fromUser.getId(), toUser.getId(), paymentOption);
 	}
 }

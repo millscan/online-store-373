@@ -6,7 +6,10 @@ import java.util.ArrayList;
 
 public class Order {
 
+	private Store store;
 	private String id;
+	private Owner seller;
+	private Customer buyer;
 	private ArrayList<Item> items;
 	private Date timestamp;
 	private boolean shipped;
@@ -18,16 +21,59 @@ public class Order {
 		this.shipped = false;
 	}
 	
+	public Order(Store s) {
+		this.store = s;
+		id = UUID.randomUUID().toString();
+		this.items = new ArrayList<Item>();
+		this.timestamp = null;
+		this.shipped = false;
+	}
+	
+	public Order(String id, ArrayList<Item> items, Date date, boolean shipped) {
+		this.id = id;
+		this.items = items;
+		this.timestamp = date;
+		this.shipped = shipped;
+	}
+	
 	//USED FOR LOADING DATA INTO ORDER FROM FILE
-	public Order(String id, ArrayList<Item> items, Date timestamp, boolean shipped) {
+	public Order(Store store, String id, Owner buyer, Customer seller, ArrayList<Item> items, Date timestamp, boolean shipped) {
+		this.store = store;
 		this.id = id;
 		this.items = items;
 		this.timestamp = timestamp;
 		this.shipped = shipped;
 	}
 	
+	public Order(Store store, Owner seller, Customer buyer) {
+		this.store = store;
+		this.buyer = buyer;
+		this.seller = seller;
+		store.orders.add(this);
+		this.id = UUID.randomUUID().toString();
+		this.items = new ArrayList<Item>();
+		this.timestamp = new Date();
+		this.shipped = false;
+	}
+	
 	public String getID() {
 		return this.id;
+	}
+	
+	public void setSeller(Owner o) {
+		this.seller = o;
+	}
+	
+	public Owner getSeller() {
+		return this.seller;
+	}
+	
+	public void setBuyer(Customer c) {
+		this.buyer = c;
+	}
+	
+	public Customer getBuyer() {
+		return this.buyer;
 	}
 
 

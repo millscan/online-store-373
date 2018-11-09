@@ -20,6 +20,13 @@ public class Customer extends User {
 		isCustomer = true;
 	}
 	
+	public Customer(Store store, String id, String username, String emailAddress, String firstName, String lastName, String password) {
+		super(id, store, username, emailAddress, firstName, lastName, password);
+		this.orders = new ArrayList<Order>();
+		this.cart = new ArrayList<Item>();
+		isCustomer = true;
+	}
+	
 	public void setShippingAddress(String shippingAddress) {
 		this.shippingAddress = shippingAddress;
 	}
@@ -68,7 +75,7 @@ public class Customer extends User {
 	}
 	
 	public String toCsvString() {
-		return String.format("Customer#%s#%s#%s#%s#%s", username, firstName, lastName, emailAddress, password);
+		return String.format("Customer#%s#%s#%s#%s#%s#%s", id, username, firstName, lastName, emailAddress, password);
 	}
 	
 	public String toDisplayString() {

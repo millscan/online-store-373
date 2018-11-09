@@ -85,6 +85,7 @@ public class StoreDataIO {
 				//System.out.println(csvLine);
 				String parsedUserData[] = csvLine.split("#");
 				if(parsedUserData[0].equals("Customer")) {
+					
 					Customer customer = new Customer(
 							store,
 							parsedUserData[1], 

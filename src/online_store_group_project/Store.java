@@ -13,7 +13,7 @@ public class Store {
 	public ArrayList<Item> items = new ArrayList<Item>();
 	public ArrayList<Order> orders = new ArrayList<Order>(); 
 	public ArrayList<User> users = new ArrayList<User>();
-	private ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	private String url;
 	PaymentOptions p1;
 	
