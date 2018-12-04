@@ -2,6 +2,8 @@ package online_store_group_project;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class Customer extends User {
 	
 	private String shippingAddress;
@@ -58,6 +60,7 @@ public class Customer extends User {
 	
 	public void addToCart(Item item) {
 		cart.add(item);
+		JOptionPane.showMessageDialog(null, "Item added to cart");
 	}
 	
 	public void removeFromCart(Item item) {

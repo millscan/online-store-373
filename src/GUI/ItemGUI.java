@@ -1,7 +1,9 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import online_store_group_project.Item;
@@ -24,6 +27,9 @@ public class ItemGUI extends JFrame{
 	GUI_ItemThumbnail item;
 	JButton addToCartButton;
 	JComboBox quantityBar;
+	JPanel rightBar;
+	JTextArea description;
+	JPanel centerPanel;
 	
 	public ItemGUI(GUI_ItemThumbnail item){
 		super("Amazeon");
@@ -43,6 +49,12 @@ public class ItemGUI extends JFrame{
 		addToCartButton = new JButton("Add to Cart");
 		searchBar = new JTextField("Search");
 		topBar = new JPanel();
+		rightBar = new JPanel();
+		description = new JTextArea();
+		centerPanel = new JPanel();
+		
+		description.setEditable(false);
+		description.setText(item.getItem().getDescription());
 		
 		ArrayList<String> options = new ArrayList<String>();
 		int i;
@@ -64,14 +76,21 @@ public class ItemGUI extends JFrame{
 		searchBar.addActionListener(new searchBarListener());
 		//This part may be unnecessary// quantityBar.addActionListener(new comboBoxListener());
 		
+		//topBar.setSize(1080, 1080);
+		
+		//topBar.setOpaque(true);
+		//topBar.setBackground(Color.BLUE);
+		topBar.add(cartButton, FlowLayout.LEFT);
+		topBar.add(searchBar, FlowLayout.LEFT);
 		topBar.add(homeButton, FlowLayout.LEFT);
-		topBar.add(searchBar, FlowLayout.CENTER);
-		topBar.add(cartButton, FlowLayout.RIGHT);
+		rightBar.add(addToCartButton);
+		rightBar.add(quantityBar);
+		centerPanel.add(item);
+		centerPanel.add(description);
 		
 		add(topBar, BorderLayout.NORTH);
-		add(item, BorderLayout.CENTER);
-		add(addToCartButton, BorderLayout.EAST);
-		add(quantityBar, BorderLayout.EAST);
+		add(centerPanel, BorderLayout.CENTER);
+		add(rightBar, BorderLayout.EAST);
 	}
 
 	private class buttonListener implements ActionListener{
@@ -103,9 +122,9 @@ public class ItemGUI extends JFrame{
 		
 		public void handleAddToCart() {
 			Item tempItem = item.getItem();
-			tempItem.setQuantity((Integer) quantityBar.getSelectedItem());
+			tempItem.setQuantity(Integer.parseInt(quantityBar.getSelectedItem().toString()));
 			//TODO: needs global user var// user.addToCart(tempItem)
-			item.getItem().setQuantity(item.getItem().getQuantity() - (Integer)quantityBar.getSelectedItem());
+			item.getItem().setQuantity(item.getItem().getQuantity() - Integer.parseInt(quantityBar.getSelectedItem().toString()));
 		}
 	}
 	
