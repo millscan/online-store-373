@@ -1,9 +1,14 @@
 package GUI;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -18,8 +23,8 @@ import online_store_group_project.Item;
 
 public class GUI_ItemThumbnail extends JPanel{
 	
-	public static final int ITEM_THUMBNAIL_WIDTH = 150;
-	public static final int ITEM_THUMBNAIL_HEIGHT = 180;
+	public static final int ITEM_THUMBNAIL_WIDTH = 200;
+	public static final int ITEM_THUMBNAIL_HEIGHT = 230;
 	
 	private Item item;
 	
@@ -27,50 +32,74 @@ public class GUI_ItemThumbnail extends JPanel{
 		// TODO Auto-generated constructor stub
 		super();
 		this.setSize(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT);
-		this.setBorder(new EmptyBorder(10, 10, 10, 10));
+		this.setPreferredSize(new Dimension(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT));
+		//this.setBorder(new EmptyBorder(10, 10, 10, 10));
+		this.setLayout(new BorderLayout());
 		
 		this.item = item;
+		if(item.getName().trim().equals("White T-shirt")){
+			System.out.println("test");
+		}
 		
-		JPanel imagePanel = new JPanel();
-		imagePanel.setSize(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_WIDTH);
-		ItemImage itemImage = new ItemImage("images/" + item.getName() + "/thumb.jpg");
-		imagePanel.add(itemImage);
+		ItemImage imagePanel = new ItemImage("images/items/" + item.getName().replaceAll(" ", "_").toLowerCase() + "/thumb.jpg");
+		imagePanel.setPreferredSize(new Dimension(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_WIDTH));
 		
 		JPanel infoPanel = new JPanel();
-		infoPanel.setSize(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT - ITEM_THUMBNAIL_WIDTH);
+		infoPanel.setLayout(new GridLayout(1, 0));
+		infoPanel.setPreferredSize(new Dimension(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT - ITEM_THUMBNAIL_WIDTH));
 		
-		JLabel nameLabel = new JLabel(item.getName());
-		JLabel priceLabel = new JLabel("$" + item.getPrice());
-		nameLabel.setSize(ITEM_THUMBNAIL_WIDTH*(2/3), ITEM_THUMBNAIL_HEIGHT - ITEM_THUMBNAIL_WIDTH);
-		priceLabel.setSize(ITEM_THUMBNAIL_WIDTH*(1/3), ITEM_THUMBNAIL_HEIGHT - ITEM_THUMBNAIL_WIDTH);
+		String displayedName = item.getName();
+		if(displayedName.length() > 15) {
+			displayedName = displayedName.substring(0, 12);
+			displayedName = displayedName.concat("...");
+		}
+		JLabel nameLabel = new JLabel(displayedName);
+		JPanel namePanel = new JPanel();
+		namePanel.setBackground(Color.WHITE);
+		namePanel.setSize(new Dimension(ITEM_THUMBNAIL_WIDTH*3/4, ITEM_THUMBNAIL_HEIGHT - ITEM_THUMBNAIL_WIDTH));
 		
-		infoPanel.add(nameLabel);
-		infoPanel.add(priceLabel);
+		JLabel priceLabel = new JLabel(String.format("$%.2f", item.getPrice()));
+		JPanel pricePanel = new JPanel();
+		priceLabel.setForeground(Color.WHITE);
+		priceLabel.setFont(new Font("Verdana", Font.BOLD, 12));
+		pricePanel.setBackground(new Color(0, 150, 20));
+		
+		pricePanel.add(priceLabel);
+		namePanel.add(nameLabel);
+		
+		infoPanel.add(namePanel);
+		infoPanel.add(pricePanel);
 		
 		this.add(imagePanel);
-		this.add(infoPanel);
+		this.add(infoPanel, BorderLayout.SOUTH);
 		this.setVisible(true);
 	}
 	
-	private class ItemImage extends Canvas{  
+	private class ItemImage extends JPanel{  
 	      
-	    public void paint(Graphics g) {  
-	        Toolkit t=Toolkit.getDefaultToolkit();  
-	        Image i=t.getImage(this.path);  
-	        g.drawImage(i, 0,0,this);  
-	    }  
 	    
-	    private String path;
+	    private BufferedImage image;
 	    
 	    public ItemImage(String path) {
-	    	if(new File(path).exists()) {
-	    		this.path = path;
+	    	try {
+	    		image = ImageIO.read(new File(path));
 	    	}
-	    	else {
-	    		this.path="images/items/default.jpg";
-	    	}
-			
+	    	catch (IOException ex){
+	    		try {
+	    			image = ImageIO.read(new File("images/items/default.jpg"));
+	    		}
+	    		catch (IOException ex_2){
+	    			System.out.println("Error reading default image file.");
+	    		}
+	    	}			
 		}
+	    
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        Image scaledImage = image.getScaledInstance(ITEM_THUMBNAIL_WIDTH,ITEM_THUMBNAIL_WIDTH,Image.SCALE_SMOOTH);
+	        g.drawImage(scaledImage, 0, 0, this); // see javadoc for more info on the parameters            
+	    }
 	  
 	} 
 	

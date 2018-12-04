@@ -304,54 +304,6 @@ public class StoreDataIO {
 		//storeCustomerOrders(c);
 	}
 	
-	public static void storeCustomerOrders(Customer customer) {
-		String ordersPath = "userData/" + customer.getUsername() + "/orders";
-		
-		File orderFolder = new File(ordersPath);
-		if(!orderFolder.exists()) {
-			orderFolder.mkdirs();
-		}
-		else {
-			clearOrdersDirectory(orderFolder);
-		}
-		
-		for(Order o : customer.getOrders()) {
-			String orderFolderPath = ordersPath + "/" + o.getID();
-			File orderFolderFile = new File(orderFolderPath);
-			if(!orderFolderFile.exists()) {
-				orderFolderFile.mkdirs();
-			}
-			
-			String orderInfoString = String.format("%s#%s",dateFormat.format(o.getTimestamp()), o.getShippedStatus());
-			String orderInfoFilePath = orderFolderPath + "/order-info.csv";
-			writeLineToFile(orderInfoFilePath, orderInfoString, false);
-			
-			String orderItemsFilePath = orderFolderPath + "/order-items.csv";
-			
-			for(Item i: o.getItems()){
-				//STRING FORMAT: id, seller id, name, description, category, price, quantity
-				String itemString = String.format("%s#%s#%s#%s#%s#%s", 
-						i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory(), i.getPrice(), i.getQuantity());
-						writeLineToFile(orderItemsFilePath, itemString, true);
-			}
-		}
-	}
-	
-	public static void storeOwnerItems(Owner owner) {
-		File ownerFolder = new File("userData/" + owner.getUsername());
-		ownerFolder.mkdirs();
-		
-		String itemsFilePath = ownerFolder + "/items.csv";
-
-		clearFile(itemsFilePath);
-		
-		for(Item i : owner.getItems()) {
-			String itemString = String.format("%s#%s#%s#%s#%s#%s", 
-					i.getSeller().getId(), i.getName(), i.getDescription(), i.getCategory(), i.getPrice(), i.getQuantity());
-			writeLineToFile(itemsFilePath, itemString, true);
-		}
-	}
-	
 	public static File getFile(String filePath) {
 		File file = new File(filePath);
 		if(!file.exists()) {
