@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.Canvas;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -61,7 +63,13 @@ public class GUI_ItemThumbnail extends JPanel{
 	    private String path;
 	    
 	    public ItemImage(String path) {
-			this.path = path;
+	    	if(new File(path).exists()) {
+	    		this.path = path;
+	    	}
+	    	else {
+	    		this.path="images/items/default.jpg";
+	    	}
+			
 		}
 	  
 	} 

@@ -9,16 +9,19 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import online_store_group_project.Item;
+import online_store_group_project.Store;
 
 public class GUI_skeleton extends JFrame{
 	JButton homeButton;
 	JButton cartButton;
 	JTextField searchBar;
 	JPanel topBar;
+	JPanel currentPage;
+	Store store;
 	
-	GUI_skeleton(){
+	GUI_skeleton(Store store){
 		super("Amazeon");
-		
+		this.store = store;
 		setSize(1080, 720);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -41,6 +44,15 @@ public class GUI_skeleton extends JFrame{
 		topBar.add(cartButton, FlowLayout.RIGHT);
 		
 		add(topBar, BorderLayout.NORTH);
+		
+		this.currentPage = new GUI_HomePage(store);
+		add(currentPage);
+	}
+	
+	public void switchPage(JPanel page) {
+		remove(currentPage);
+		this.currentPage = page;
+		add(currentPage);
 	}
 
 	private class buttonListener implements ActionListener{

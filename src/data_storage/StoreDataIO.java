@@ -31,12 +31,15 @@ public class StoreDataIO {
 	}
 	
 	
-	public static void LoadStoreData(Store store) {
+	public static Store LoadStoreData() {
+		Store store = new Store();
 		LoadOwners(store);
 		LoadCustomers(store);
 		LoadItems(store);
 		LoadOrders(store);
 		LoadTransactions(store);
+		
+		return store;
 	}
 	
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
