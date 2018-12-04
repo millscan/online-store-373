@@ -19,11 +19,15 @@ public class GUI_ItemThumbnail extends JPanel{
 	public static final int ITEM_THUMBNAIL_WIDTH = 150;
 	public static final int ITEM_THUMBNAIL_HEIGHT = 180;
 	
+	private Item item;
+	
 	public GUI_ItemThumbnail(Item item) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.setSize(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT);
 		this.setBorder(new EmptyBorder(10, 10, 10, 10));
+		
+		this.item = item;
 		
 		JPanel imagePanel = new JPanel();
 		imagePanel.setSize(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_WIDTH);
@@ -61,4 +65,8 @@ public class GUI_ItemThumbnail extends JPanel{
 		}
 	  
 	} 
+	
+	public Item getItem() {
+		return item;
+	}
 }

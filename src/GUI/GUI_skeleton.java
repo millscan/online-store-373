@@ -40,7 +40,7 @@ public class GUI_skeleton extends JFrame{
 		topBar.add(searchBar, FlowLayout.CENTER);
 		topBar.add(cartButton, FlowLayout.RIGHT);
 		
-		add(homeButton, BorderLayout.NORTH);
+		add(topBar, BorderLayout.NORTH);
 	}
 
 	private class buttonListener implements ActionListener{
