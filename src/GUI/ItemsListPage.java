@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import online_store_group_project.Item;
@@ -39,6 +40,8 @@ public class ItemsListPage extends JFrame{
 		mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 		mainPanel.setLayout(new GridLayout(0, 1));
 		
+		JScrollPane scroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
 		for(int i = 0; i < items.size(); i = i + 1) {
 			Item item = items.get(i).getItem();
 			JPanel photoPanel = new JPanel();
@@ -60,9 +63,10 @@ public class ItemsListPage extends JFrame{
 			
 			viewButton.addActionListener(new itemListener());
 			
-			mainPanel.add(photoPanel);
-			mainPanel.add(viewButton);
+			scroll.add(photoPanel);
+			scroll.add(viewButton);
 		}
+		mainPanel.add(scroll);
 		pageSkeleton.add(mainPanel);
 	}
 	
