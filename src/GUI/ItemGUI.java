@@ -54,12 +54,15 @@ public class ItemGUI extends JPanel{
 		
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
+		centerPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 		centerPanel.setPreferredSize(new Dimension(500, 250));
 		
 		rightBar.setPreferredSize(new Dimension(250, 50));
-		
+
 		description = new JTextArea();
+		description.setFont(new Font("Lucida Sans", Font.BOLD, 14));
 		description.setEditable(false);
+		description.setOpaque(false);
 		description.setText(item.getDescription());
 		
 		ArrayList<String> options = new ArrayList<String>();
