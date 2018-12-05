@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -18,8 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import online_store_group_project.Item;
-import online_store_group_project.Store;
+import online_store_group_project.*;
 
 public class GUI_skeleton extends JFrame{
 	HomeButton homeButton;
@@ -28,10 +29,12 @@ public class GUI_skeleton extends JFrame{
 	JTextField searchBar;
 	JPanel topBar;
 	JPanel currentPage;
+	public User activeUser;
 	public Store store;
 	
 	public GUI_skeleton(Store store){
 		super("Amazeon");
+		activeUser = new Customer();
 		this.store = store;
 		setSize(1080, 720);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -47,10 +50,19 @@ public class GUI_skeleton extends JFrame{
 		CoolButton accountButton = new CoolButton("Account", 100, 60);
 		
 		JPanel searchBarContainer = new JPanel();
-		searchBarContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
+		searchBarContainer.setBorder(new EmptyBorder(5, 15, 5, 15));
 		searchBarContainer.setPreferredSize(new Dimension(600, 50));
 		searchBar = new JTextField("Search");
+		searchBar.setBorder(new EmptyBorder(0, 10, 0, 10));
 		searchBar.setPreferredSize(new Dimension(600, 30));
+		searchBar.addFocusListener(new FocusListener() {
+			public void focusLost(FocusEvent e) {
+				
+			}
+			public void focusGained(FocusEvent e) {
+				
+			}
+		});
 		
 		topBar = new JPanel();
 		topBar.setBorder(new EmptyBorder(5, 5, 5, 5));
