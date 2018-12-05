@@ -158,7 +158,7 @@ public class Store {
 	public ArrayList<Item> searchItems(String itemName){
 		ArrayList<Item> searchResults = new ArrayList<Item>();
 		for(Item item : this.items) {
-			if(item.getName().contains(itemName)) {
+			if(item.getName().toLowerCase().contains(itemName.toLowerCase())) {
 				searchResults.add(item);
 			}
 		}

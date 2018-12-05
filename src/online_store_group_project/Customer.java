@@ -72,6 +72,10 @@ public class Customer extends User {
 		cart.remove(item);
 	}
 	
+	public void emptyCart() {
+		this.cart.clear();
+	}
+	
 	public ArrayList<Item> getCart(){
 		return cart;
 	}

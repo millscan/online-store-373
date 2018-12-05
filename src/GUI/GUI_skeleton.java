@@ -15,11 +15,13 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import data_storage.StoreDataIO;
 import online_store_group_project.*;
 
 public class GUI_skeleton extends JFrame{
@@ -35,12 +37,25 @@ public class GUI_skeleton extends JFrame{
 	public GUI_skeleton(Store store){
 		super("Amazeon");
 		activeUser = new Customer();
+		activeUser.setStore(store);
 		this.store = store;
 		setSize(1920, 1080);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	saveData();
+		    	System.exit(0);
+		    }
+		});
+		
 		buildFrame();
 		setVisible(true);
+	}
+	
+	private void saveData() {
+		StoreDataIO.storeStoreData(this.store);
 	}
 
 	public void buildFrame() {
@@ -198,6 +213,30 @@ public class GUI_skeleton extends JFrame{
 		
 	}
 	
+	public void checkout() {
+		if(activeUser.getIsCustomer()) {
+			if(((Customer)activeUser).getCart().size() > 0) {
+				Order o = new Order();
+				o.setBuyer((Customer)activeUser);
+				o.setSeller(((Customer)activeUser).getCart().get(0).getSeller());
+				for(Item i : ((Customer)activeUser).getCart()) {
+					o.addItem(i);
+				}
+				o.setTimestamp(new Date());
+				((Customer)activeUser).addOrder(o);
+				((Customer)activeUser).emptyCart();
+				JOptionPane.showMessageDialog(null, "Successfully checked out!");	
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "You have no items in your cart");
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "You must be a customer to check out");
+			//CANT CHECK OUT AS OWNER
+		}
+	}
+	
 	public void handleCart() {
 		switchPage(new GUI_Cart(this));
 	}
@@ -213,13 +252,10 @@ public class GUI_skeleton extends JFrame{
 		        JOptionPane.showMessageDialog(null, "No items matching that search.");	
 			}
 			else {
-				handleSearch(itemMatches);
+				switchPage(new ItemGUI(itemMatches.get(0), activeUser));
 			}
 		}
 	}
 	
-	private void handleSearch(ArrayList<Item> items) {
-		switchPage(new ItemsListPage(items, this));
-	}
 
 }

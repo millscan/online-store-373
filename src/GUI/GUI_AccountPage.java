@@ -93,10 +93,10 @@ public class GUI_AccountPage extends JPanel {
 			itemInfoDiv.setPreferredSize(new Dimension(930, 100));
 			itemInfoDiv.setBorder(new EmptyBorder(10, 10, 10, 10));
 			if(order.getItems().size() > 2) {
-				orderSummary = new CoolLabel(String.format("%s and %s more items", order.getItems().get(0).getName(), order.getItems().size() - 1), Color.BLACK);
+				orderSummary = new CoolLabel(String.format("%s and %s more items", order.getItems().get(0).getName(), order.getItems().size() - 1));
 			}
 			else if(order.getItems().size() > 1) {
-				orderSummary = new CoolLabel(String.format("%s and 1 more item", order.getItems().get(0).getName()), Color.BLACK);
+				orderSummary = new CoolLabel(String.format("%s and 1 more item", order.getItems().get(0).getName()));
 			}
 			else {
 				orderSummary = new CoolLabel(order.getItems().get(0).getName());
