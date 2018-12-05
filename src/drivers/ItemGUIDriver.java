@@ -1,6 +1,7 @@
 package drivers;
 
 import GUI.GUI_ItemThumbnail;
+import GUI.GUI_skeleton;
 import GUI.ItemGUI;
 import online_store_group_project.Item;
 import online_store_group_project.Owner;
@@ -16,7 +17,7 @@ public class ItemGUIDriver {
 		item1.setName("Bagel");
 		item1.setPrice(1.0);
 		item1.setDescription("It's a friggin bagel. What more description do ya need?");
-		GUI_ItemThumbnail itemTN = new GUI_ItemThumbnail(item1);
-		ItemGUI testGUI = new ItemGUI(itemTN);
+		GUI_ItemThumbnail itemTN = new GUI_ItemThumbnail(new GUI_skeleton(store), item1);
+		ItemGUI testGUI = new ItemGUI(item1);
 	}
 }

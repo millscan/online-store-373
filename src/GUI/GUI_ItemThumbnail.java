@@ -11,6 +11,9 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +30,9 @@ public class GUI_ItemThumbnail extends JPanel{
 	public static final int ITEM_THUMBNAIL_HEIGHT = 230;
 	
 	private Item item;
+	private GUI_skeleton driver;
 	
-	public GUI_ItemThumbnail(Item item) {
+	public GUI_ItemThumbnail(GUI_skeleton driver, Item item) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.setSize(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT);
@@ -37,20 +41,20 @@ public class GUI_ItemThumbnail extends JPanel{
 		this.setLayout(new BorderLayout());
 		
 		this.item = item;
+		this.driver = driver;
 		if(item.getName().trim().equals("White T-shirt")){
 			System.out.println("test");
 		}
 		
-		ItemImage imagePanel = new ItemImage("images/items/" + item.getName().replaceAll(" ", "_").toLowerCase() + "/thumb.jpg");
-		imagePanel.setPreferredSize(new Dimension(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_WIDTH));
+		ItemImage imagePanel = new ItemImage(item, ITEM_THUMBNAIL_WIDTH);
 		
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new GridLayout(1, 0));
 		infoPanel.setPreferredSize(new Dimension(ITEM_THUMBNAIL_WIDTH, ITEM_THUMBNAIL_HEIGHT - ITEM_THUMBNAIL_WIDTH));
 		
 		String displayedName = item.getName();
-		if(displayedName.length() > 15) {
-			displayedName = displayedName.substring(0, 12);
+		if(displayedName.length() > 14) {
+			displayedName = displayedName.substring(0, 11);
 			displayedName = displayedName.concat("...");
 		}
 		JLabel nameLabel = new JLabel(displayedName);
@@ -72,36 +76,20 @@ public class GUI_ItemThumbnail extends JPanel{
 		
 		this.add(imagePanel);
 		this.add(infoPanel, BorderLayout.SOUTH);
+		
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				handleClick();
+			}
+		});
+				
 		this.setVisible(true);
 	}
 	
-	private class ItemImage extends JPanel{  
-	      
-	    
-	    private BufferedImage image;
-	    
-	    public ItemImage(String path) {
-	    	try {
-	    		image = ImageIO.read(new File(path));
-	    	}
-	    	catch (IOException ex){
-	    		try {
-	    			image = ImageIO.read(new File("images/items/default.jpg"));
-	    		}
-	    		catch (IOException ex_2){
-	    			System.out.println("Error reading default image file.");
-	    		}
-	    	}			
-		}
-	    
-	    @Override
-	    protected void paintComponent(Graphics g) {
-	        super.paintComponent(g);
-	        Image scaledImage = image.getScaledInstance(ITEM_THUMBNAIL_WIDTH,ITEM_THUMBNAIL_WIDTH,Image.SCALE_SMOOTH);
-	        g.drawImage(scaledImage, 0, 0, this); // see javadoc for more info on the parameters            
-	    }
-	  
-	} 
+	private void handleClick() {
+		driver.switchPage(new ItemGUI(this.item));
+	}
+	
 	
 	public Item getItem() {
 		return item;

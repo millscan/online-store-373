@@ -55,6 +55,17 @@ public class Item {
 
 	}
 	
+	public Item(Item item) {
+		this.id = item.id;
+		this.store = item.store;
+		this.seller = item.seller;
+		this.name = item.name;
+		this.description = item.description;
+		this.category = item.category;
+		this.price = item.price;
+		this.quantity = item.quantity;
+	}
+	
 	
 	public String getId() {
 		return this.id;

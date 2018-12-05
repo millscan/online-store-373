@@ -2,11 +2,13 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import online_store_group_project.Item;
 import online_store_group_project.Store;
@@ -15,25 +17,30 @@ public class GUI_HomePage extends JPanel {
 	
 	final int PAGE_WIDTH = 1080;
 	
-	public GUI_HomePage(Store store) {
+	public GUI_HomePage(GUI_skeleton driver) {
 		// TODO Auto-generated constructor stub		
-		FeaturedItems featured = new FeaturedItems(store);
-		this.setSize(PAGE_WIDTH, 690);
+		FeaturedItems featured = new FeaturedItems(driver);
+		this.setSize(PAGE_WIDTH-40, 650);
+		this.setBackground(new Color(40, 40, 40));
+		setBorder(new EmptyBorder(20, 20, 20, 20));
 		this.add(featured);
 		this.setVisible(true);
 	}
 	
 	private class FeaturedItems extends JPanel {
 		
-		public FeaturedItems(Store store) {
+		public FeaturedItems(GUI_skeleton driver) {
+			Store store = driver.store;
 			this.setSize(PAGE_WIDTH, GUI_ItemThumbnail.ITEM_THUMBNAIL_HEIGHT*2 + 30);
-			this.setBackground(Color.BLACK);
 			this.setLayout(new BorderLayout());
+			this.setOpaque(false);
 			
 			JPanel header = new JPanel();
 			header.setSize(PAGE_WIDTH, 30);
 			header.setBackground(Color.WHITE);
+			
 			JLabel headerLabel = new JLabel("FEATURED ITEMS");
+			headerLabel.setFont(new Font("Lucida Sans", Font.BOLD, 18));
 			header.add(headerLabel);
 			
 			JPanel topItemsPanel = new JPanel();
@@ -55,11 +62,11 @@ public class GUI_HomePage extends JPanel {
 			}
 			
 			for(int i = 0; i < featuredItems.size()/2; i++) {
-				GUI_ItemThumbnail itemThumb = new GUI_ItemThumbnail(featuredItems.get(i));
+				GUI_ItemThumbnail itemThumb = new GUI_ItemThumbnail(driver, featuredItems.get(i));
 				topItemsPanel.add(itemThumb);
 			}
 			for(int i = featuredItems.size()/2; i < featuredItems.size(); i++) {
-				GUI_ItemThumbnail itemThumb = new GUI_ItemThumbnail(featuredItems.get(i));
+				GUI_ItemThumbnail itemThumb = new GUI_ItemThumbnail(driver, featuredItems.get(i));
 				bottomItemsPanel.add(itemThumb);
 			}
 			

@@ -1,9 +1,13 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -12,14 +16,14 @@ import online_store_group_project.Item;
 import online_store_group_project.Store;
 
 public class GUI_skeleton extends JFrame{
-	JButton homeButton;
-	JButton cartButton;
+	CoolButton homeButton;
+	CoolButton cartButton;
 	JTextField searchBar;
 	JPanel topBar;
 	JPanel currentPage;
-	Store store;
+	public Store store;
 	
-	GUI_skeleton(Store store){
+	public GUI_skeleton(Store store){
 		super("Amazeon");
 		this.store = store;
 		setSize(1080, 720);
@@ -30,8 +34,14 @@ public class GUI_skeleton extends JFrame{
 	}
 
 	public void buildFrame() {
-		homeButton = new JButton("Home");
-		cartButton = new JButton("Cart");
+		homeButton = new CoolButton("Home");
+		homeButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				goHome();
+			}
+		});
+		
+		cartButton = new CoolButton("Cart");
 		searchBar = new JTextField("Search");
 		topBar = new JPanel();
 		
@@ -39,20 +49,29 @@ public class GUI_skeleton extends JFrame{
 		cartButton.addActionListener(new buttonListener());
 		searchBar.addActionListener(new searchBarListener());
 		
-		topBar.add(homeButton, FlowLayout.LEFT);
-		topBar.add(searchBar, FlowLayout.CENTER);
-		topBar.add(cartButton, FlowLayout.RIGHT);
+		topBar.setLayout(new BorderLayout());
+		topBar.add(homeButton, BorderLayout.WEST);
+		topBar.add(searchBar, BorderLayout.CENTER);
+		topBar.add(cartButton, BorderLayout.EAST);
+		topBar.setPreferredSize(new Dimension(1080, 30));
 		
 		add(topBar, BorderLayout.NORTH);
 		
-		this.currentPage = new GUI_HomePage(store);
+		this.currentPage = new GUI_HomePage(this);
 		add(currentPage);
 	}
 	
+	public void goHome() {
+		switchPage(new GUI_HomePage(this));
+	}
+	
 	public void switchPage(JPanel page) {
+		System.out.println("switching page");
 		remove(currentPage);
 		this.currentPage = page;
 		add(currentPage);
+		repaint();
+		revalidate();
 	}
 
 	private class buttonListener implements ActionListener{
