@@ -45,7 +45,7 @@ public class ItemGUI extends JPanel{
 
 	public void buildFrame() {
 		JPanel photoPanel = new JPanel();
-		photoPanel.setPreferredSize(new Dimension(250, 250));
+		photoPanel.setPreferredSize(new Dimension(200, 250));
 		photoPanel.setOpaque(false);
 		
 		rightBar = new JPanel();
@@ -55,9 +55,9 @@ public class ItemGUI extends JPanel{
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-		centerPanel.setPreferredSize(new Dimension(500, 250));
+		centerPanel.setPreferredSize(new Dimension(600, 250));
 		
-		rightBar.setPreferredSize(new Dimension(250, 50));
+		rightBar.setPreferredSize(new Dimension(200, 50));
 
 		description = new JTextArea();
 		description.setFont(new Font("Lucida Sans", Font.BOLD, 14));
@@ -78,7 +78,7 @@ public class ItemGUI extends JPanel{
 		
 		//TODO: need to test this
 		JPanel buyBox = new JPanel();
-		buyBox.setPreferredSize(new Dimension(250, 100));
+		buyBox.setPreferredSize(new Dimension(200, 100));
 		buyBox.setOpaque(false);
 		quantityBar = new JComboBox(CBInput);
 		

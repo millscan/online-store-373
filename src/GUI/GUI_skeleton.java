@@ -4,19 +4,24 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import online_store_group_project.Item;
 import online_store_group_project.Store;
 
 public class GUI_skeleton extends JFrame{
-	CoolButton homeButton;
+	HomeButton homeButton;
 	CoolButton cartButton;
 	JTextField searchBar;
 	JPanel topBar;
@@ -34,18 +39,12 @@ public class GUI_skeleton extends JFrame{
 	}
 
 	public void buildFrame() {
-		homeButton = new CoolButton("Home");
-		homeButton.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				goHome();
-			}
-		});
+		homeButton = new HomeButton(100, 30);
 		
 		cartButton = new CoolButton("Cart");
 		searchBar = new JTextField("Search");
 		topBar = new JPanel();
 		
-		homeButton.addActionListener(new buttonListener());
 		cartButton.addActionListener(new buttonListener());
 		searchBar.addActionListener(new searchBarListener());
 		
@@ -73,16 +72,47 @@ public class GUI_skeleton extends JFrame{
 		repaint();
 		revalidate();
 	}
+	
+	private class HomeButton extends JPanel{
+		
+		private Image image;
+		private int width;
+		private int height;
+		
+		public HomeButton(int width, int height) {
+			super();
+			this.width = width;
+			this.height = height;
+			this.setPreferredSize(new Dimension(width, height));
+			this.setSize(width, height);
+			
+			try {
+				image = ImageIO.read(new File("images/amazeon.png"));
+			}
+			catch (IOException ex_2){
+				System.out.println("Error reading default home image file.");
+			}
+			
+			this.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					goHome();
+				}
+			});
+		}
+		
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        Image scaledImage = image.getScaledInstance(this.width,this.height,Image.SCALE_SMOOTH);
+	        g.drawImage(scaledImage, 0, 0, this); // see javadoc for more info on the parameters            
+	    }
+	}
 
 	private class buttonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JButton source = (JButton)(e.getSource());
-			
-			if(source.equals(homeButton))
-			{
-				handleHome();	
-			}
-			else if(source.equals(cartButton))
+
+			if(source.equals(cartButton))
 			{
 				handleCart();
 			}
