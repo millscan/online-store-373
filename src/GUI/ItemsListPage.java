@@ -15,18 +15,76 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import online_store_group_project.Customer;
 import online_store_group_project.Item;
 import online_store_group_project.Store;
 
-public class ItemsListPage extends JFrame{
+public class ItemsListPage extends JPanel{
+	private GUI_skeleton pageSkeleton;
+	private ArrayList<GUI_ItemThumbnail> items;
+	private Customer user;
+	
+	final int PAGE_WIDTH = 1920;
+	
+	public ItemsListPage(ArrayList<Item> items, GUI_skeleton driver) {
+		pageSkeleton = driver;
+		this.items = new ArrayList<GUI_ItemThumbnail>();
+		user = (Customer) driver.activeUser;
+		Cart cart = new Cart(driver);
+		this.setSize(PAGE_WIDTH-40, 900);
+		this.setBackground(new Color(40, 40, 40));
+		setBorder(new EmptyBorder(20, 20, 20, 20));
+		this.add(cart);
+		this.setVisible(true);
+	}
+	
+	private class Cart extends JPanel{
+		public Cart(GUI_skeleton driver) {
+			this.setLayout(new GridLayout(0,1));
+			
+			JPanel header = new JPanel();
+			header.setSize(PAGE_WIDTH, 30);
+			
+			CoolLabel headerLabel = new CoolLabel("Search Results", Color.BLACK);
+			header.add(headerLabel);
+			
+			this.add(header);
+			
+			ArrayList<Item> cartItems = new ArrayList<Item>();
+			for(int i = 0; i < user.getCart().size(); i = i + 1) {
+				cartItems.add(user.getCart().get(i));
+			}
+			
+			for(int i = 0; i < cartItems.size(); i++) {
+				GUI_ItemThumbnail itemThumb = new GUI_ItemThumbnail(driver, cartItems.get(i));
+				this.add(itemThumb);
+				
+				items.add(itemThumb);
+				
+				JButton viewButton = new JButton("View Item " + String.valueOf(i));
+				viewButton.addActionListener(new itemListener());
+				this.add(viewButton);
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	/*
 	GUI_skeleton pageSkeleton;
 	ArrayList<GUI_ItemThumbnail> items;
 	JPanel mainPanel;
 	
-	public ItemsListPage(ArrayList<Item> items, Store store) {
-		pageSkeleton = new GUI_skeleton(store);
+	public ItemsListPage(ArrayList<Item> items, GUI_skeleton driver) {
+		pageSkeleton = driver;
+		this.items = new ArrayList<GUI_ItemThumbnail>();
 		for(int i = 0; i < items.size(); i = i + 1) {
-			this.items.add(new GUI_ItemThumbnail(new GUI_skeleton(store), items.get(i)));
+			GUI_ItemThumbnail tempTN = new GUI_ItemThumbnail(pageSkeleton, items.get(i));
+			this.items.add(tempTN);
 		}
 		
 		buildFrame();
@@ -35,41 +93,25 @@ public class ItemsListPage extends JFrame{
 	
 	public void buildFrame() {
 		mainPanel = new JPanel();
+		mainPanel.setLayout(new GridLayout(0, 1));
 		mainPanel.setPreferredSize(new Dimension(1040, 250));
 		mainPanel.setBackground(new Color(40, 40, 40));
 		mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-		mainPanel.setLayout(new GridLayout(0, 1));
 		
 		JScrollPane scroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		for(int i = 0; i < items.size(); i = i + 1) {
-			Item item = items.get(i).getItem();
-			JPanel photoPanel = new JPanel();
-			photoPanel.setPreferredSize(new Dimension(200, 250));
-			photoPanel.setOpaque(false);
-			
-			JPanel titlePanel = new JPanel();
-			titlePanel.setPreferredSize(new Dimension(250, 30));
-			titlePanel.setOpaque(false);
-			JLabel titleLabel = new JLabel(item.getName().toUpperCase());
-			titleLabel.setForeground(Color.WHITE);
-			titleLabel.setFont(new Font("Lucida Sans", Font.BOLD, 18));
-			titlePanel.add(titleLabel);
 			
 			JButton viewButton = new JButton("View Item " + String.valueOf(i));
 			
-			photoPanel.add(titlePanel);
-			photoPanel.add(new ItemImage(item, 225));
-			
 			viewButton.addActionListener(new itemListener());
 			
-			scroll.add(photoPanel);
+			scroll.add(items.get(i));
 			scroll.add(viewButton);
 		}
 		mainPanel.add(scroll);
-		pageSkeleton.add(mainPanel);
 	}
-	
+	*/
 	private class itemListener implements ActionListener{
 
 		@Override

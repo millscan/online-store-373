@@ -207,16 +207,19 @@ public class GUI_skeleton extends JFrame{
 		{
 			ArrayList<Item> itemMatches = new ArrayList<Item>();
 			String query = searchBar.getText();
-			//TODO: this line will use a global sore var// itemMatches = store.searchItems(query);
+			itemMatches = store.searchItems(query);
 			
 			if(itemMatches.size() == 0) {
 		        JOptionPane.showMessageDialog(null, "No items matching that search.");	
 			}
 			else {
-				//new ItemsInSearchGUI(store, itemMatches);
-				//TODO: this part needs to use the Item Thumbnails.
+				handleSearch(itemMatches);
 			}
 		}
+	}
+	
+	private void handleSearch(ArrayList<Item> items) {
+		switchPage(new ItemsListPage(items, this));
 	}
 
 }
