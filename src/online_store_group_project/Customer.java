@@ -12,6 +12,9 @@ public class Customer extends User {
 	
 	//I added this default constructor
 	public Customer() {
+		super();
+		this.orders = new ArrayList<Order>();
+		this.cart = new ArrayList<Item>();
 		isCustomer = true;
 	}
 	
@@ -51,6 +54,8 @@ public class Customer extends User {
 	}
 	
 	public void addOrder(Order order) {
+		store.orders.add(order);
+		order.getSeller().addReceivedOrder(order);
 		orders.add(order);
 	}
 	

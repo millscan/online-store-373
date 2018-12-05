@@ -23,7 +23,7 @@ public class ItemImage extends JPanel{
 	    	this.setPreferredSize(new Dimension(sideLength, sideLength));
 	    	this.setSize(sideLength, sideLength);
 	    	
-	    	String path = "images/items/" + imageItem.getName().replaceAll(" ", "_").toLowerCase() + "/thumb.jpg";
+	    	String path = "images/items/" + imageItem.getName().replaceAll(" ", "_").toLowerCase() + "/Thumb.jpg";
 	    	try {
 	    		image = ImageIO.read(new File(path));
 	    	}
@@ -40,6 +40,14 @@ public class ItemImage extends JPanel{
 	    @Override
 	    protected void paintComponent(Graphics g) {
 	        super.paintComponent(g);
+	        if(image == null) {
+	    		try {
+	    			image = ImageIO.read(new File("images/items/default.jpg"));
+	    		}
+	    		catch (IOException ex_2){
+	    			System.out.println("Error reading default image file.");
+	    		}
+	        }
 	        Image scaledImage = image.getScaledInstance(sideLength,sideLength,Image.SCALE_SMOOTH);
 	        g.drawImage(scaledImage, 0, 0, this); // see javadoc for more info on the parameters            
 	    }

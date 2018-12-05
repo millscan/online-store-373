@@ -408,6 +408,13 @@ public class Driver1_newStoreStructure {
 		s1.customers.add(c30);
 		s1.customers.add(c31);
 		
+		Order order = new Order();
+		order.setBuyer(c1);
+		order.setSeller(o1);
+		order.addItem(i1);
+		order.setTimestamp(new Date());
+		c1.addOrder(order);
+		
 		StoreDataIO.storeStoreData(s1);
 		
 		

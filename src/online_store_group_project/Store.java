@@ -130,6 +130,15 @@ public class Store {
 		return false;
 	}
 	
+	public User getUserByUsername(String username) {
+		for(User u: this.users) {
+			if (u.getUsername().equals(username)) {
+				return u;
+			}
+		}
+		return null;
+	}
+	
 	//Make sure item name is valid 
 	public boolean itemNameTaken(String itemName) {
 		 for(Item i : this.items) {

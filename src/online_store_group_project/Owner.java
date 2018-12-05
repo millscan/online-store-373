@@ -74,6 +74,10 @@ public class Owner extends User {
 		this.receivedOrders = receivedOrders;
 	}
 	
+	public void addReceivedOrder(Order o) {
+		this.receivedOrders.add(o);
+	}
+	
 	public String toCsvString() {
 		return String.format("Owner#%s#%s#%s#%s#%s#%s", id, username, firstName, lastName, emailAddress, password);
 	}

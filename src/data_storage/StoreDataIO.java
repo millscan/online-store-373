@@ -38,6 +38,8 @@ public class StoreDataIO {
 		LoadItems(store);
 		LoadOrders(store);
 		LoadTransactions(store);
+		store.users.addAll(store.owners);
+		store.users.addAll(store.customers);
 		
 		return store;
 	}
@@ -245,7 +247,7 @@ public class StoreDataIO {
 			String orderItemsPath = orderFoldersPath + "/" + orderId +  "/order-items.csv";
 			orderItems = getItemsFromItemFile(store, orderItemsPath);
 
-			Order o = new Order(store, orderId, orderSeller, orderBuyer, orderItems, orderTimestamp, orderShipped);
+			Order o = new Order(store, orderId, orderBuyer, orderSeller, orderItems, orderTimestamp, orderShipped);
 			orderBuyer.addOrder(o);
 			orders.add(o);			
 			//System.out.println(folderPath);

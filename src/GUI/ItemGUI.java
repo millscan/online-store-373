@@ -35,7 +35,7 @@ public class ItemGUI extends JPanel{
 	public ItemGUI(Item item){
 		this.item = item;
 		
-		setPreferredSize(new Dimension(1040, 250));
+		setPreferredSize(new Dimension(1880, 250));
 		setBackground(new Color(40, 40, 40));
 		setBorder(new EmptyBorder(20, 20, 20, 20));
 		
@@ -55,7 +55,7 @@ public class ItemGUI extends JPanel{
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-		centerPanel.setPreferredSize(new Dimension(600, 250));
+		centerPanel.setPreferredSize(new Dimension(900, 250));
 		
 		rightBar.setPreferredSize(new Dimension(200, 50));
 
@@ -93,9 +93,7 @@ public class ItemGUI extends JPanel{
 		JPanel titlePanel = new JPanel();
 		titlePanel.setPreferredSize(new Dimension(250, 30));
 		titlePanel.setOpaque(false);
-		JLabel titleLabel = new JLabel(item.getName().toUpperCase());
-		titleLabel.setForeground(Color.WHITE);
-		titleLabel.setFont(new Font("Lucida Sans", Font.BOLD, 18));
+		CoolLabel titleLabel = new CoolLabel(item.getName().toUpperCase());
 		titlePanel.add(titleLabel);
 		
 		buyBox.add(addToCartButton);

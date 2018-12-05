@@ -15,12 +15,12 @@ import online_store_group_project.Store;
 
 public class GUI_HomePage extends JPanel {
 	
-	final int PAGE_WIDTH = 1080;
+	final int PAGE_WIDTH = 1920;
 	
 	public GUI_HomePage(GUI_skeleton driver) {
 		// TODO Auto-generated constructor stub		
 		FeaturedItems featured = new FeaturedItems(driver);
-		this.setSize(PAGE_WIDTH-40, 650);
+		this.setSize(PAGE_WIDTH-40, 900);
 		this.setBackground(new Color(40, 40, 40));
 		setBorder(new EmptyBorder(20, 20, 20, 20));
 		this.add(featured);
@@ -37,10 +37,8 @@ public class GUI_HomePage extends JPanel {
 			
 			JPanel header = new JPanel();
 			header.setSize(PAGE_WIDTH, 30);
-			header.setBackground(Color.WHITE);
 			
-			JLabel headerLabel = new JLabel("FEATURED ITEMS");
-			headerLabel.setFont(new Font("Lucida Sans", Font.BOLD, 18));
+			CoolLabel headerLabel = new CoolLabel("FEATURED ITEMS", Color.BLACK);
 			header.add(headerLabel);
 			
 			JPanel topItemsPanel = new JPanel();

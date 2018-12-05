@@ -37,8 +37,10 @@ public class Order {
 	}
 	
 	//USED FOR LOADING DATA INTO ORDER FROM FILE
-	public Order(Store store, String id, Owner buyer, Customer seller, ArrayList<Item> items, Date timestamp, boolean shipped) {
+	public Order(Store store, String id, Customer buyer, Owner seller, ArrayList<Item> items, Date timestamp, boolean shipped) {
 		this.store = store;
+		this.seller = seller;
+		this.buyer = buyer;
 		this.id = id;
 		this.items = items;
 		this.timestamp = timestamp;
@@ -54,6 +56,14 @@ public class Order {
 		this.items = new ArrayList<Item>();
 		this.timestamp = new Date();
 		this.shipped = false;
+	}
+	
+	public double getTotal() {
+		double total = 0;
+		for(Item item: items) {
+			total += item.getPrice()*item.getQuantity();
+		}
+		return total;
 	}
 	
 	public String getID() {
@@ -91,6 +101,10 @@ public class Order {
 	
 	public Date getTimestamp() {
 		return this.timestamp;
+	}
+	
+	public void setTimestamp(Date date) {
+		this.timestamp = date;
 	}
 	
 	public void ship() {

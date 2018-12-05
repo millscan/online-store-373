@@ -36,8 +36,8 @@ public class GUI_skeleton extends JFrame{
 		super("Amazeon");
 		activeUser = new Customer();
 		this.store = store;
-		setSize(1080, 720);
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setSize(1920, 1080);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		buildFrame();
 		setVisible(true);
@@ -45,9 +45,7 @@ public class GUI_skeleton extends JFrame{
 
 	public void buildFrame() {
 		homeButton = new HomeButton(120, 60);
-		
-		cartButton = new CoolButton("Cart", 100, 60);
-		CoolButton accountButton = new CoolButton("Account", 100, 60);
+		AccountButton accountButton = new AccountButton(60, 60);
 		
 		JPanel searchBarContainer = new JPanel();
 		searchBarContainer.setBorder(new EmptyBorder(5, 15, 5, 15));
@@ -68,8 +66,8 @@ public class GUI_skeleton extends JFrame{
 		topBar.setBorder(new EmptyBorder(5, 5, 5, 5));
 		topBar.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		
+		cartButton = new CoolButton("Cart");
 		cartButton.addActionListener(new buttonListener());
-		accountButton.addActionListener(new buttonListener());
 		searchBar.addActionListener(new searchBarListener());
 		
 		topBar.add(homeButton);
@@ -87,6 +85,21 @@ public class GUI_skeleton extends JFrame{
 	
 	public void goHome() {
 		switchPage(new GUI_HomePage(this));
+	}
+	
+	public void goToAccountPage() {
+		if(activeUser.getId() == null) {
+			switchPage(new GUI_SignInPage(this));
+		}
+		else {
+			switchPage(new GUI_AccountPage(this));
+		}
+	}
+	
+	public void logInUser(User user) {
+		if(user != null) {
+			this.activeUser = user;
+		}
 	}
 	
 	public void switchPage(JPanel page) {
@@ -121,6 +134,41 @@ public class GUI_skeleton extends JFrame{
 			this.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
 					goHome();
+				}
+			});
+		}
+		
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        Image scaledImage = image.getScaledInstance(this.width,this.height,Image.SCALE_SMOOTH);
+	        g.drawImage(scaledImage, 0, 0, this); // see javadoc for more info on the parameters            
+	    }
+	}
+	
+	private class AccountButton extends JPanel{
+		
+		private Image image;
+		private int width;
+		private int height;
+		
+		public AccountButton(int width, int height) {
+			super();
+			this.width = width;
+			this.height = height;
+			this.setPreferredSize(new Dimension(width, height));
+			this.setSize(width, height);
+			
+			try {
+				image = ImageIO.read(new File("images/account.png"));
+			}
+			catch (IOException ex_2){
+				System.out.println("Error reading default account image file.");
+			}
+			
+			this.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					goToAccountPage();
 				}
 			});
 		}
