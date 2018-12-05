@@ -8,8 +8,16 @@ import javax.swing.JButton;
 public class CoolButton extends JButton {
 	public CoolButton(String text) {
 		super(text);
-		// TODO Auto-generated constructor stub
-		this.setSize(new Dimension(50, 20));
+		this.setPreferredSize(new Dimension(100, 30));
+		this.setSize(new Dimension(100, 30));
+		this.setBackground(Color.WHITE);
+	}
+	
+	public CoolButton(String text, int width, int height) {
+		super(text);
+		Dimension d = new Dimension(width, height);
+		this.setSize(d);
+		this.setPreferredSize(d);
 		this.setBackground(Color.WHITE);
 	}
 }

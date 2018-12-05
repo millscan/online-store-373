@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import online_store_group_project.Item;
 import online_store_group_project.Store;
@@ -23,6 +24,7 @@ import online_store_group_project.Store;
 public class GUI_skeleton extends JFrame{
 	HomeButton homeButton;
 	CoolButton cartButton;
+	
 	JTextField searchBar;
 	JPanel topBar;
 	JPanel currentPage;
@@ -39,20 +41,31 @@ public class GUI_skeleton extends JFrame{
 	}
 
 	public void buildFrame() {
-		homeButton = new HomeButton(100, 30);
+		homeButton = new HomeButton(120, 60);
 		
-		cartButton = new CoolButton("Cart");
+		cartButton = new CoolButton("Cart", 100, 60);
+		CoolButton accountButton = new CoolButton("Account", 100, 60);
+		
+		JPanel searchBarContainer = new JPanel();
+		searchBarContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
+		searchBarContainer.setPreferredSize(new Dimension(600, 50));
 		searchBar = new JTextField("Search");
+		searchBar.setPreferredSize(new Dimension(600, 30));
+		
 		topBar = new JPanel();
+		topBar.setBorder(new EmptyBorder(5, 5, 5, 5));
+		topBar.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		
 		cartButton.addActionListener(new buttonListener());
+		accountButton.addActionListener(new buttonListener());
 		searchBar.addActionListener(new searchBarListener());
 		
-		topBar.setLayout(new BorderLayout());
-		topBar.add(homeButton, BorderLayout.WEST);
-		topBar.add(searchBar, BorderLayout.CENTER);
-		topBar.add(cartButton, BorderLayout.EAST);
-		topBar.setPreferredSize(new Dimension(1080, 30));
+		topBar.add(homeButton);
+		searchBarContainer.add(searchBar);
+		topBar.add(searchBarContainer);
+		topBar.add(accountButton);
+		topBar.add(cartButton);
+		topBar.setPreferredSize(new Dimension(1080, 70));
 		
 		add(topBar, BorderLayout.NORTH);
 		
