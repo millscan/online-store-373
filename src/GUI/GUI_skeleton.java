@@ -196,9 +196,10 @@ public class GUI_skeleton extends JFrame{
 			//new HomePageGUI();
 		}
 		
-		public void handleCart() {
-			//new CartGUI();
-		}
+	}
+	
+	public void handleCart() {
+		switchPage(new GUI_Cart(this));
 	}
 	
 	private class searchBarListener implements ActionListener{

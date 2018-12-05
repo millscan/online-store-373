@@ -78,7 +78,7 @@ public class ItemsListPage extends JFrame{
 			String temp2 = tempItem.getText().substring(10, tempItem.getText().length());
 			int i = Integer.parseInt(temp2);
 			Item item = items.get(i).getItem();
-			pageSkeleton.switchPage(new ItemGUI(item));
+			pageSkeleton.switchPage(new ItemGUI(item, pageSkeleton.activeUser));
 		}
 		
 	}

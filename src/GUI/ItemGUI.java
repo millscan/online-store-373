@@ -21,10 +21,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import online_store_group_project.Customer;
 import online_store_group_project.Item;
+import online_store_group_project.User;
 
 public class ItemGUI extends JPanel{
 
+	Customer user;
 	Item item;
 	CoolButton addToCartButton;
 	JComboBox quantityBar;
@@ -32,8 +35,9 @@ public class ItemGUI extends JPanel{
 	JTextArea description;
 	JPanel centerPanel;
 	
-	public ItemGUI(Item item){
+	public ItemGUI(Item item, User user){
 		this.item = item;
+		this.user = (Customer)user;
 		
 		setPreferredSize(new Dimension(1880, 250));
 		setBackground(new Color(40, 40, 40));
@@ -123,7 +127,7 @@ public class ItemGUI extends JPanel{
 		public void handleAddToCart() {
 			Item tempItem = new Item(item);
 			tempItem.setQuantity(Integer.parseInt(quantityBar.getSelectedItem().toString()));
-			//TODO: needs global user var// user.addToCart(tempItem)
+			user.addToCart(tempItem);
 			item.setQuantity(item.getQuantity() - Integer.parseInt(quantityBar.getSelectedItem().toString()));
 		}
 	}

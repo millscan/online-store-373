@@ -87,7 +87,7 @@ public class GUI_ItemThumbnail extends JPanel{
 	}
 	
 	private void handleClick() {
-		driver.switchPage(new ItemGUI(this.item));
+		driver.switchPage(new ItemGUI(this.item, driver.activeUser));
 	}
 	
 	
